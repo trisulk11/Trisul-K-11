@@ -16,7 +16,7 @@
             background: #111;
             color: white;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             padding: 0 20px;
             position: fixed;
@@ -24,12 +24,15 @@
             left: 0;
             z-index: 1000;
         }
+        #top-bar div:first-child {
+            margin-right: 40px;
+        }
         #sidebar {
             width: 250px;
             height: 100vh;
             position: fixed;
             background: #f9f9f9;
-            padding: 50px 15px 15px;
+            padding: 70px 15px 15px;
         }
         #sidebar ul {
             list-style: none;
@@ -45,7 +48,7 @@
         }
         #main-content {
             margin-left: 270px;
-            padding: 70px 40px 20px;
+            padding: 70px 60px 20px;
             width: 100%;
         }
         section {
@@ -68,7 +71,7 @@
     <!-- Sidebar Navigation -->
     <div id="sidebar">
         <ul>
-            <li style="margin-top: 40px;"><a href="#about" onclick="scrollToSection('about')">About Me</a></li>
+            <li style="margin-top: 60px;"><a href="#about" onclick="scrollToSection('about')">About Me</a></li>
             <li><a href="#skills" onclick="scrollToSection('skills')">Skill Showcase</a></li>
             <li><a href="#testimonials" onclick="scrollToSection('testimonials')">Testimonials</a></li>
             <li><a href="#contact" onclick="scrollToSection('contact')">Contact Me</a></li>
