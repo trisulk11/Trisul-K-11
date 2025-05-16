@@ -3,34 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trisul Portfolio</title>
+    <!-- Strong SEO Meta Tags -->
+    <title>Trisul | Network & Cloud Engineer | Expert Network Architecture, Cloud Deployment, Security & SEO</title>
+    <meta name="description" content="Unlock powerful, secure, and scalable network and cloud solutions with Trisul. Expert in network architecture, Express.js/Node.js/Vite.js deployments, Docker, Caddy, Windows Server, and SEO. Get robust IT services for your business today.">
+    <meta name="keywords" content="Network Engineer, Cloud Engineer, Network Architecture, Express.js Deployment, Node.js, Vite.js, EC2, Docker, Caddy, SonicWall, VLAN, VoIP, Microsoft 0365, Active Directory, GPO, SEO, IT Solutions, Trisul, Secure Networks, Cloud Migration, Full-stack Deployment, Windows Server, Technical SEO, Portfolio">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://your-domain.com/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Trisul | Network & Cloud Engineer | Expert IT Solutions">
+    <meta property="og:description" content="Secure, scalable, and reliable network & cloud engineering. Explore Trisul’s portfolio: Network design, cloud deployments, security, and SEO.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-domain.com/">
+    <meta property="og:image" content="https://your-domain.com/og-image.jpg">
+    <meta property="og:site_name" content="Trisul Portfolio">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Trisul | Network & Cloud Engineer | Expert IT Solutions">
+    <meta name="twitter:description" content="Secure, scalable, and reliable network & cloud engineering. Explore Trisul’s portfolio: Network design, cloud deployments, security, and SEO.">
+    <meta name="twitter:image" content="https://your-domain.com/og-image.jpg">
+    <meta name="twitter:site" content="@yourtwitterhandle">
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://your-domain.com/favicon.ico" type="image/x-icon">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Trisul",
+      "url": "https://your-domain.com/",
+      "jobTitle": "Network & Cloud Engineer",
+      "description": "Expert in secure network architecture, cloud deployments, Express.js/Node.js/Vite.js, Docker, Caddy, Windows Server, and SEO.",
+      "email": "mailto:trisuk11@gmail.com",
+      "sameAs": [
+        "https://linkedin.com/in/yourprofile",
+        "https://twitter.com/yourtwitterhandle",
+        "https://github.com/yourgithub"
+      ],
+      "makesOffer": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Network Architecture & Engineering",
+            "description": "Design and implement secure, high-performance network topologies, routers, switches, SonicWall firewalls, VLANs, VoIP, and Microsoft 0365 integration. Troubleshoot complex networking issues and optimize for reliability."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Cloud & App Deployment",
+            "description": "Deploy Express.js, Node.js, and Vite.js applications on EC2/Linux servers with Caddy reverse proxy and Docker. Set up CI/CD, domain mapping, SSL, and scalable cloud infrastructure."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Windows Server & IT Administration",
+            "description": "Active Directory setup, Group Policy Object (GPO) deployment, automated app rollout, and Windows server troubleshooting for secure, efficient IT environments."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "SEO & Web Optimization",
+            "description": "Technical SEO audits, keyword research, on-page optimization, and web performance tuning for maximum visibility and user engagement."
+          }
+        }
+      ]
+    }
+    </script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             background-color: #f4f4f4;
-            color: #333;
+            color: #222;
         }
         header {
             background-color: #007acc;
             color: white;
-            padding: 40px 20px;
+            padding: 40px 20px 20px 20px;
             text-align: center;
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-        header p {
-            font-size: 1.2em;
+        .social-links {
             margin-top: 10px;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 8px;
+            color: white;
+            font-size: 1.5em;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .social-links a:hover {
+            color: #ffe066;
         }
         main {
             padding: 20px;
             max-width: 1100px;
-            margin: 20px auto 60px auto;
+            margin: 20px auto 80px auto;
             background: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             border-radius: 8px;
@@ -78,6 +159,23 @@
         .service-btn:hover {
             background-color: #005f99;
         }
+        .share-buttons {
+            margin-top: 15px;
+        }
+        .share-buttons button {
+            background: #007acc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            margin-right: 8px;
+            padding: 8px 14px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .share-buttons button:hover {
+            background: #005f99;
+        }
         footer {
             background-color: #222;
             color: white;
@@ -99,19 +197,31 @@
                 flex-direction: column;
                 gap: 15px;
             }
+            main {
+                margin-bottom: 100px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Welcome to Trisul's Portfolio</h1>
-        <p>Network & Cloud Engineer </p>
+        <h1>Trisul | Network & Cloud Engineer</h1>
+        <p>Delivering Secure, Scalable, and Powerful IT Solutions</p>
+        <div class="social-links">
+            <a href="https://linkedin.com/in/yourprofile" target="_blank" aria-label="LinkedIn"><span>&#128100;</span></a>
+            <a href="https://twitter.com/yourtwitterhandle" target="_blank" aria-label="Twitter"><span>&#128081;</span></a>
+            <a href="https://github.com/yourgithub" target="_blank" aria-label="GitHub"><span>&#128187;</span></a>
+        </div>
+        <div class="share-buttons">
+            <button onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url='+encodeURIComponent(window.location.href),'_blank')">Share on LinkedIn</button>
+            <button onclick="window.open('https://twitter.com/intent/tweet?url='+encodeURIComponent(window.location.href)+'&text=Check+out+Trisul%27s+expert+IT+portfolio!','_blank')">Share on Twitter</button>
+        </div>
     </header>
     <main>
         <section>
             <h2>About Me</h2>
             <p>
-                Hi, I'm Trisul, a network and cloud engineer with expertise in designing robust network architectures, deploying full-stack applications, and optimizing both infrastructure and web performance.
+                I am Trisul, a results-driven Network & Cloud Engineer with a proven track record in designing robust network architectures, deploying full-stack web applications, and optimizing digital infrastructure for security, performance, and scalability. My mission is to empower businesses with future-ready IT solutions that drive growth and resilience.
             </p>
         </section>
         <section>
@@ -120,27 +230,27 @@
                 <div class="service-card">
                     <h3>Network Architecture & Engineering</h3>
                     <ul>
-                        <li>Network design and topology planning</li>
+                        <li>Strategic network design and topology planning</li>
                         <li>Router, switch, and firewall setup (SonicWall, VLANs)</li>
-                        <li>Firewall rule configuration and troubleshooting (e.g., port blocking)</li>
-                        <li>VoIP phone systems</li>
-                        <li>Microsoft 0365 integration</li>
+                        <li>Firewall rule configuration and advanced troubleshooting</li>
+                        <li>VoIP phone system deployment</li>
+                        <li>Microsoft 0365 integration and support</li>
                         <li>Public & private cloud networking</li>
-                        <li>General network troubleshooting</li>
+                        <li>Comprehensive network issue resolution</li>
                     </ul>
-                    <a href="mailto:trisuk11@gmail.com?subject=Network%20Engineering%20Service%20Inquiry" class="service-btn">Contact</a>
+                    <a href="mailto:trisuk11@gmail.com?subject=Network%20Engineering%20Service%20Inquiry" class="service-btn">Request Service</a>
                 </div>
                 <div class="service-card">
                     <h3>Cloud & App Deployment</h3>
                     <ul>
                         <li>Express.js, Node.js, Vite.js app deployment</li>
-                        <li>Frontend & backend deployment on EC2/Linux servers</li>
+                        <li>Full-stack deployment on EC2/Linux servers</li>
                         <li>Caddy reverse proxy configuration</li>
                         <li>Docker containerization & orchestration</li>
-                        <li>CI/CD pipeline setup</li>
-                        <li>Domain mapping & SSL setup</li>
+                        <li>CI/CD pipeline setup & automation</li>
+                        <li>Domain mapping & SSL implementation</li>
                     </ul>
-                    <a href="mailto:trisuk11@gmail.com?subject=Cloud%20Deployment%20Service%20Inquiry" class="service-btn">Contact</a>
+                    <a href="mailto:trisuk11@gmail.com?subject=Cloud%20Deployment%20Service%20Inquiry" class="service-btn">Request Service</a>
                 </div>
                 <div class="service-card">
                     <h3>Windows Server & IT Administration</h3>
@@ -148,25 +258,25 @@
                         <li>Active Directory setup & management</li>
                         <li>Group Policy Object (GPO) deployment</li>
                         <li>Automated app deployment via GPO</li>
-                        <li>Windows server troubleshooting</li>
+                        <li>Comprehensive Windows server troubleshooting</li>
                     </ul>
-                    <a href="mailto:trisuk11@gmail.com?subject=Windows%20Server%20Service%20Inquiry" class="service-btn">Contact</a>
+                    <a href="mailto:trisuk11@gmail.com?subject=Windows%20Server%20Service%20Inquiry" class="service-btn">Request Service</a>
                 </div>
                 <div class="service-card">
                     <h3>SEO & Web Optimization</h3>
                     <ul>
-                        <li>Technical SEO audits</li>
+                        <li>Technical SEO audits for top search visibility</li>
                         <li>Keyword research & on-page optimization</li>
                         <li>Performance optimization (Lighthouse, Core Web Vitals)</li>
-                        <li>Best practices for web apps</li>
+                        <li>SEO best practices for web apps</li>
                     </ul>
-                    <a href="mailto:trisuk11@gmail.com?subject=SEO%20Service%20Inquiry" class="service-btn">Contact</a>
+                    <a href="mailto:trisuk11@gmail.com?subject=SEO%20Service%20Inquiry" class="service-btn">Request Service</a>
                 </div>
             </div>
         </section>
         <section>
             <h2>Contact</h2>
-            <p>Feel free to reach out via email: <a href="mailto:trisuk11@gmail.com" class="email-link">trisuk11@gmail.com</a></p>
+            <p>Ready to elevate your IT infrastructure? <strong>Email:</strong> <a href="mailto:trisuk11@gmail.com" class="email-link">trisuk11@gmail.com</a></p>
         </section>
     </main>
     <footer>
