@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us | Trisul Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Trisul for network, cloud, and IT solutions.">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.3em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.05em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 500px;
+      margin: 32px auto 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.07);
+      padding: 32px 24px;
+    }
+    h2 {
+      color: #223A5E;
+      margin-top: 0;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    label {
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: #223A5E;
+    }
+    input, textarea, select {
+      padding: 10px;
+      border: 1px solid #c2d3e7;
+      border-radius: 5px;
+      font-size: 1em;
+      background: #f3f6f9;
+    }
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    button[type="submit"] {
+      background: linear-gradient(90deg, #1FA2FF 0%, #21D4FD 100%);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 12px 0;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button[type="submit"]:hover {
+      background: linear-gradient(90deg, #21D4FD 0%, #1FA2FF 100%);
+      color: #FFD600;
+    }
+    .success, .error {
+      margin-top: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: 500;
+    }
+    .success {
+      background: #e7f9ed;
+      color: #1dbf73;
+    }
+    .error {
+      background: #ffeaea;
+      color: #e74c3c;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      main {
+        margin: 18px 4px 32px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Contact Us</h1>
+    <p>Let's connect for your network, cloud, or IT needs!</p>
+  </header>
+  <main>
+    <h2>Send a Message</h2>
+    <form id="contactForm" autocomplete="off">
+      <div>
+        <label for="name">Name *</label>
+        <input type="text" id="name" name="Name" required>
+      </div>
+      <div>
+        <label for="requirement">Requirement *</label>
+        <input type="text" id="requirement" name="Requirement" required>
+      </div>
+      <div>
+        <label for="details">Details *</label>
+        <textarea id="details" name="Details" required></textarea>
+      </div>
+      <div>
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="Email" required>
+      </div>
+      <button type="submit">Submit</button>
+      <div id="formMessage"></div>
+    </form>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+  <script>
+    // ---- GOOGLE APPS SCRIPT WEB APP ENDPOINT ----
+    // Replace this URL with your own Apps Script Web App URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby1g1lFaF81PbYB61pvSC22gjI5Op6S9YOv89OYZYH7TWO7DPvByguC8PpuUzZtTW_A/exec';
+
+    const form = document.getElementById('contactForm');
+    const formMessage = document.getElementById('formMessage');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      formMessage.textContent = "Submitting...";
+      fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+        .then(response => {
+          form.reset();
+          formMessage.textContent = "Thank you! Your message has been sent.";
+          formMessage.className = "success";
+        })
+        .catch(error => {
+          formMessage.textContent = "Oops! Something went wrong. Please try again or email trisuk11@gmail.com.";
+          formMessage.className = "error";
+        });
+    });
+  </script>
+</body>
+</html>
