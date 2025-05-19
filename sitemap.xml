@@ -8,8 +8,24 @@
 
 
 <url>
-  <loc>https://trisulk11.in/</loc>
-  <lastmod>2025-05-17T09:48:39+00:00</lastmod>
+  <loc>https://www.trisulk11.in/</loc>
+  <lastmod>2025-05-19T15:48:12+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://www.trisulk11.in/contact-us.html</loc>
+  <lastmod>2025-05-19T15:48:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.trisulk11.in/privacy-policy.html</loc>
+  <lastmod>2025-05-19T15:48:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.trisulk11.in/blog/getting-started-with-docker.html</loc>
+  <lastmod>2025-05-19T15:48:13+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 
 
