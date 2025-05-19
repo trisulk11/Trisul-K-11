@@ -12,6 +12,7 @@
       margin: 0;
       padding: 0;
       color: #222;
+      transition: background 0.3s, color 0.3s;
     }
     header {
       background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
@@ -19,6 +20,7 @@
       padding: 32px 0 20px 0;
       text-align: center;
       border-bottom: 4px solid #21D4FD;
+      transition: background 0.3s, color 0.3s;
     }
     header h1 {
       margin: 0;
@@ -34,17 +36,39 @@
       margin: 20px 0 0 0;
       text-align: center;
     }
-    nav a {
+    nav a, .dark-toggle-btn {
       color: #FFD600;
       text-decoration: none;
-      margin: 0 18px;
+      margin: 0 10px;
       font-weight: 500;
       font-size: 1.1em;
-      transition: color 0.2s;
+      transition: color 0.2s, background 0.2s;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px 14px;
+      border-radius: 5px;
+      display: inline-block;
+      vertical-align: middle;
     }
-    nav a:hover {
+    nav a:hover, .dark-toggle-btn:hover {
       color: #fff;
-      text-decoration: underline;
+      background: #1FA2FF;
+    }
+    .sitemap-btn {
+      border: 2px solid #FFD600;
+      background: none;
+      color: #FFD600;
+      font-size: 1em;
+      padding: 6px 14px;
+      margin-left: 8px;
+      border-radius: 5px;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+    }
+    .sitemap-btn:hover {
+      background: #FFD600;
+      color: #223A5E;
     }
     main {
       max-width: 900px;
@@ -53,6 +77,7 @@
       border-radius: 10px;
       box-shadow: 0 2px 14px rgba(34,58,94,0.07);
       padding: 32px 24px;
+      transition: background 0.3s, color 0.3s;
     }
     .intro {
       text-align: center;
@@ -177,6 +202,7 @@
       text-align: center;
       padding: 20px 10px;
       letter-spacing: 1px;
+      transition: background 0.3s, color 0.3s;
     }
     footer a {
       color: #FFD600;
@@ -185,6 +211,55 @@
     }
     footer a:hover {
       text-decoration: underline;
+    }
+    /* DARK MODE */
+    .dark-mode {
+      background: #161b22 !important;
+      color: #f9fafb !important;
+    }
+    .dark-mode header,
+    .dark-mode footer {
+      background: #10141a !important;
+      color: #FFD600 !important;
+    }
+    .dark-mode nav a,
+    .dark-mode .dark-toggle-btn,
+    .dark-mode footer a {
+      color: #FFD600 !important;
+      background: none !important;
+    }
+    .dark-mode .sitemap-btn {
+      border: 2px solid #FFD600 !important;
+      background: none !important;
+      color: #FFD600 !important;
+    }
+    .dark-mode .sitemap-btn:hover {
+      background: #FFD600 !important;
+      color: #223A5E !important;
+    }
+    .dark-mode main {
+      background: #23272e !important;
+      color: #f9fafb !important;
+    }
+    .dark-mode .service-item,
+    .dark-mode .blog-item {
+      background: #23272e !important;
+      color: #f9fafb !important;
+      box-shadow: 0 2px 6px rgba(21, 34, 54, 0.13);
+    }
+    .dark-mode .service-item strong,
+    .dark-mode .blog-item strong {
+      color: #FFD600 !important;
+    }
+    .dark-mode .request-btn,
+    .dark-mode .cta a {
+      background: linear-gradient(90deg, #FFD600 0%, #1FA2FF 100%) !important;
+      color: #223A5E !important;
+    }
+    .dark-mode .request-btn:hover,
+    .dark-mode .cta a:hover {
+      background: linear-gradient(90deg, #1FA2FF 0%, #FFD600 100%) !important;
+      color: #fff !important;
     }
     @media (max-width: 800px) {
       main {
@@ -207,6 +282,8 @@
       <a href="https://www.trisulk11.in/contact-us.html">Contact Us</a>
       <a href="https://www.trisulk11.in/privacy-policy.html">Privacy Policy</a>
       <a href="https://www.trisulk11.in/blog/getting-started-with-docker.html">Blog</a>
+      <a href="/sitemap.html" class="sitemap-btn">Sitemap</a>
+      <button onclick="toggleDarkMode()" class="dark-toggle-btn" aria-label="Toggle dark mode">🌙 Dark Mode</button>
     </nav>
   </header>
   <main>
@@ -271,7 +348,8 @@
     <p>
       <a href="https://www.trisulk11.in/privacy-policy.html">Privacy Policy</a> |
       <a href="https://www.trisulk11.in/contact-us.html">Contact Us</a> |
-      <a href="https://www.trisulk11.in/blog/getting-started-with-docker.html">Blog</a>
+      <a href="https://www.trisulk11.in/blog/getting-started-with-docker.html">Blog</a> |
+      <a href="/sitemap.html">Sitemap</a>
     </p>
     <p>
       Connect: 
@@ -281,5 +359,10 @@
     </p>
     <p>&copy; 2025 Trisul. All rights reserved.</p>
   </footer>
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+  </script>
 </body>
 </html>
