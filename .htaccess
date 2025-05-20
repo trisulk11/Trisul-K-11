@@ -21,3 +21,13 @@ RewriteRule ^(.*)$ https://www.trisulk11.in/$1 [L,R=301]
   ExpiresByType application/pdf "access plus 1 month"
   ExpiresDefault "access plus 2 days"
 </IfModule>
+# Leverage browser caching
+<IfModule mod_headers.c>
+  <FilesMatch "\.(jpg|jpeg|png|gif|webp|css|js|woff|woff2|ttf|svg|eot|ico)$">
+    Header set Cache-Control "max-age=31536000, public"
+  </FilesMatch>
+</IfModule>
+# Enable Gzip compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json application/xml
+</IfModule>
