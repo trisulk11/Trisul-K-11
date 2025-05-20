@@ -19,5 +19,8 @@
     <loc>https://www.trisulk11.in/toolshome.html</loc>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
+<url>
+  <loc>https://www.trisulk11.in/ipv4-subnet-calculator.html</loc>
+  <priority>0.7</priority>
   </url>
 </urlset>
