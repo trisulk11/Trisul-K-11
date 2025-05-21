@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding and Using DNS Tools for Troubleshooting | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to use DNS lookup, dig, nslookup, and online tools to troubleshoot domain and network issues.">
+  <link rel="canonical" href="https://trisulk11.in/blog/dns-tools-troubleshooting.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>Understanding and Using DNS Tools for Troubleshooting</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-21">May 21, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          DNS (Domain Name System) is the backbone of the internet, translating human-friendly domain names into IP addresses. When something goes wrong with a website or network, DNS issues are often the culprit. In this guide, you'll learn how to use essential DNS tools—both command-line and online—to diagnose and fix common problems.
+        </p>
+        <h3>Why DNS Troubleshooting Matters</h3>
+        <ul>
+          <li>Quickly identify if a site is down for everyone or just you</li>
+          <li>Check if DNS records (A, CNAME, MX, TXT) are correct</li>
+          <li>Spot propagation delays or misconfigurations</li>
+          <li>Ensure emails and web services work reliably</li>
+        </ul>
+        <h3>Essential DNS Tools</h3>
+        <ul>
+          <li><b>nslookup:</b> Built into Windows, Linux, and macOS. Simple and fast for quick lookups.</li>
+          <li><b>dig:</b> More advanced, gives detailed DNS record info.</li>
+          <li><b>host:</b> Another command-line tool, great for quick checks.</li>
+          <li><b>Online tools:</b> Websites like MXToolbox, DNSChecker, and Google Admin Toolbox.</li>
+        </ul>
+        <h3>How to Use nslookup</h3>
+        <pre><code>nslookup trisulk11.in
+nslookup -type=MX trisulk11.in
+nslookup -type=TXT trisulk11.in
+</code></pre>
+        <p>
+          <b>Tip:</b> Use <code>server x.x.x.x</code> in nslookup to query a specific DNS server.
+        </p>
+        <h3>How to Use dig</h3>
+        <pre><code>dig trisulk11.in
+dig MX trisulk11.in
+dig @8.8.8.8 trisulk11.in ANY
+</code></pre>
+        <p>
+          <b>Tip:</b> <code>+short</code> gives concise answers: <code>dig trisulk11.in +short</code>
+        </p>
+        <h3>Checking DNS Propagation</h3>
+        <p>
+          When you update DNS records, changes can take time to propagate. Use online tools to check from multiple locations:
+        </p>
+        <ul>
+          <li><a href="https://dnschecker.org/" target="_blank">dnschecker.org</a></li>
+          <li><a href="https://mxtoolbox.com/" target="_blank">mxtoolbox.com</a></li>
+        </ul>
+        <h3>Common DNS Issues & Solutions</h3>
+        <ul>
+          <li><b>Site not loading?</b> Check if the A record points to the correct IP.</li>
+          <li><b>Email not working?</b> Verify MX and SPF/TXT records.</li>
+          <li><b>SSL errors?</b> Make sure CNAME and A records are correct for your certificate provider.</li>
+          <li><b>Propagation delays?</b> Wait for TTL to expire, or check with multiple DNS servers.</li>
+        </ul>
+        <h3>Bonus: Flush Local DNS Cache</h3>
+        <pre><code>// Windows
+ipconfig /flushdns
+
+// macOS
+sudo killall -HUP mDNSResponder
+
+// Linux (varies)
+sudo systemd-resolve --flush-caches
+</code></pre>
+        <h3>Conclusion</h3>
+        <p>
+          Mastering DNS tools like <b>nslookup</b> and <b>dig</b> empowers you to troubleshoot network and website issues quickly. Combine command-line checks with online tools for a complete picture, and you'll resolve DNS problems with confidence.
+        </p>
+        <p>
+          <strong>Have a DNS troubleshooting tip or question? Leave a comment or contact me!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: DNS, Troubleshooting, Networking, Tutorials</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
