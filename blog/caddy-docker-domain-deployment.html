@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Deploying Web Apps with Caddy and Docker on a Custom Domain | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Step-by-step guide to deploying web applications using Caddy and Docker, with automatic HTTPS and custom domain setup.">
+  <link rel="canonical" href="https://trisulk11.in/blog/caddy-docker-domain-deployment.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>Deploying Web Apps with Caddy and Docker on a Custom Domain</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-21">May 21, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          Combining <strong>Caddy</strong> and <strong>Docker</strong> is one of the fastest ways to deploy modern web applications with automatic HTTPS and clean configuration. In this guide, you’ll learn how to set up Caddy as a reverse proxy in Docker, connect it to your app, and serve it over your custom domain with SSL—all in just a few steps.
+        </p>
+        <h3>Why Caddy + Docker?</h3>
+        <ul>
+          <li><strong>Automatic HTTPS:</strong> Caddy gets and renews SSL certificates for your domain, hands-free.</li>
+          <li><strong>Simple Config:</strong> The Caddyfile is human-friendly and powerful for routing, proxying, and more.</li>
+          <li><strong>Portability:</strong> Docker lets you run your stack anywhere, identically.</li>
+          <li><strong>Resilience:</strong> Docker and Caddy can auto-restart and recover from failures.</li>
+        </ul>
+
+        <h3>Step 1: Point Your Domain to Your Server</h3>
+        <p>
+          Log in to your domain registrar and set an <b>A record</b> for your domain (e.g., <code>yourdomain.com</code>) to your server’s public IP address.<br>
+          Example:
+        </p>
+        <pre><code>Type: A
+Name: @
+Value: YOUR_SERVER_IP
+TTL: Automatic</code></pre>
+        <p>
+          Wait for DNS propagation (usually a few minutes to an hour).
+        </p>
+
+        <h3>Step 2: Project Structure</h3>
+        <p>
+          Organize your files like this:
+        </p>
+        <pre><code>my-caddy-app/
+  ├── Caddyfile
+  ├── docker-compose.yml
+  └── site/
+      └── index.html
+</code></pre>
+
+        <h3>Step 3: Write Your Caddyfile</h3>
+        <p>
+          For a static site:
+        </p>
+        <pre><code>yourdomain.com {
+  root * /usr/share/caddy
+  file_server
+}
+</code></pre>
+        <p>
+          For a backend app (e.g., Node.js on port 3000):
+        </p>
+        <pre><code>yourdomain.com {
+  reverse_proxy app:3000
+}
+</code></pre>
+
+        <h3>Step 4: Docker Compose Setup</h3>
+        <p>
+          Sample <code>docker-compose.yml</code> for a static site:
+        </p>
+        <pre><code>version: "3.7"
+services:
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./site:/usr/share/caddy
+      - caddy_data:/data
+      - caddy_config:/config
+volumes:
+  caddy_data:
+  caddy_config:
+</code></pre>
+        <p>
+          For a backend app:
+        </p>
+        <pre><code>version: "3.7"
+services:
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+  app:
+    image: your-backend-image
+    expose:
+      - "3000"
+volumes:
+  caddy_data:
+  caddy_config:
+</code></pre>
+
+        <h3>Step 5: Redirect All Traffic to Your Domain (Recommended)</h3>
+        <p>
+          To ensure all HTTP/HTTPS and www traffic redirects to your main domain, add this to your Caddyfile <b>above</b> your main site block:
+        </p>
+        <pre><code>http://, https:// {
+  redir https://yourdomain.com{uri} permanent
+}
+yourdomain.com {
+  reverse_proxy app:3000
+}
+</code></pre>
+        <p>
+          This ensures all requests are redirected to your canonical domain with HTTPS.
+        </p>
+
+        <h3>Step 6: Start Everything Up</h3>
+        <p>
+          From your project directory, run:
+        </p>
+        <pre><code>docker compose up -d
+</code></pre>
+        <p>
+          Caddy will automatically obtain SSL certificates for your domain and serve your app securely.
+        </p>
+
+        <h3>Step 7: Visit Your Site</h3>
+        <p>
+          Open <a href="https://yourdomain.com" target="_blank">https://yourdomain.com</a> in your browser. You should see your app live with a valid SSL certificate—no manual certificate management required!
+        </p>
+
+        <h3>Troubleshooting</h3>
+        <ul>
+          <li><b>DNS not propagating?</b> Double-check your A record and wait a bit longer.</li>
+          <li><b>SSL errors?</b> Make sure ports 80 and 443 are open and not blocked by a firewall.</li>
+          <li><b>Changed your config?</b> Run <code>docker compose restart caddy</code> to reload Caddy with your new settings.</li>
+        </ul>
+
+        <h3>Conclusion</h3>
+        <p>
+          Caddy and Docker together offer a modern, secure, and fast way to deploy web apps on your own domain. With automatic HTTPS, simple configuration, and Docker’s portability, you can focus on building your application—not managing infrastructure.
+        </p>
+        <p>
+          <strong>Questions or want a template for your stack? Leave a comment or contact me!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: Caddy, Docker, Domain Deployment, Tutorials</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
