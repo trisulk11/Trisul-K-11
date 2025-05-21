@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Optimizing Website Performance for Core Web Vitals | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn practical steps to improve your website's Core Web Vitals and boost SEO, user experience, and conversion rates.">
+  <link rel="canonical" href="https://trisulk11.in/blog/optimizing-core-web-vitals.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>Optimizing Website Performance for Core Web Vitals</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-21">May 21, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          In 2025, <strong>Core Web Vitals</strong> are more important than ever for SEO, user experience, and conversion rates. Google uses these metrics to rank your site, and users expect fast, smooth web experiences. This guide covers what Core Web Vitals are and practical steps to improve them.
+        </p>
+        <h3>What Are Core Web Vitals?</h3>
+        <ul>
+          <li><b>LCP (Largest Contentful Paint):</b> Measures loading performance. Aim for &lt;2.5s.</li>
+          <li><b>FID (First Input Delay):</b> Measures interactivity. Aim for &lt;100ms.</li>
+          <li><b>CLS (Cumulative Layout Shift):</b> Measures visual stability. Aim for &lt;0.1.</li>
+        </ul>
+        <h3>How to Measure Core Web Vitals</h3>
+        <ul>
+          <li><a href="https://pagespeed.web.dev/" target="_blank">Google PageSpeed Insights</a></li>
+          <li><a href="https://web.dev/measure/" target="_blank">web.dev/measure</a></li>
+          <li>Chrome DevTools (Lighthouse tab)</li>
+          <li>Search Console &rarr; Core Web Vitals report</li>
+        </ul>
+        <h3>Practical Steps to Improve Core Web Vitals</h3>
+        <h4>1. Optimize Images</h4>
+        <ul>
+          <li>Compress images before uploading (use WebP or AVIF formats)</li>
+          <li>Use <code>&lt;img loading="lazy"&gt;</code> for lazy loading</li>
+          <li>Serve appropriately sized images for different devices</li>
+        </ul>
+        <h4>2. Minimize and Defer JavaScript</h4>
+        <ul>
+          <li>Minify JS files</li>
+          <li>Defer non-critical scripts with <code>defer</code> or <code>async</code></li>
+          <li>Avoid large JS bundles—split code if possible</li>
+        </ul>
+        <h4>3. Use Efficient Fonts</h4>
+        <ul>
+          <li>Limit the number of font families and weights</li>
+          <li>Use <code>font-display: swap</code> in your CSS</li>
+        </ul>
+        <h4>4. Reduce Layout Shifts (CLS)</h4>
+        <ul>
+          <li>Always set <code>width</code> and <code>height</code> on images and embeds</li>
+          <li>Avoid inserting content above existing content (e.g., banners, ads)</li>
+        </ul>
+        <h4>5. Enable Caching and Use a CDN</h4>
+        <ul>
+          <li>Set cache headers for static assets</li>
+          <li>Use a Content Delivery Network for global speed</li>
+        </ul>
+        <h3>Bonus: Server-Side Optimizations</h3>
+        <ul>
+          <li>Use HTTP/2 or HTTP/3</li>
+          <li>Enable Gzip or Brotli compression</li>
+          <li>Optimize server response times (TTFB)</li>
+        </ul>
+        <h3>Conclusion</h3>
+        <p>
+          Improving Core Web Vitals is a win-win for users and search engines. Regularly test your site, fix the biggest issues first, and focus on fast, stable, and interactive experiences. Even small improvements can make a big difference for your SEO and your visitors.
+        </p>
+        <p>
+          <strong>Questions or want a Core Web Vitals audit? Contact me!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: Web Performance, Core Web Vitals, SEO, Tutorials</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
