@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Deploying a Node.js App with PM2 and Nginx on Ubuntu | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A practical step-by-step guide to deploying Node.js applications using PM2 and Nginx on Ubuntu servers.">
+  <link rel="canonical" href="https://trisulk11.in/blog/deploy-nodejs-pm2-nginx-ubuntu.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>Deploying a Node.js App with PM2 and Nginx on Ubuntu</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-21">May 21, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          Deploying Node.js applications in production requires more than just running <code>node app.js</code>. You need process management, auto-restarts, and a way to serve your app securely over HTTP/HTTPS. In this guide, you'll learn how to deploy a Node.js app on Ubuntu using <strong>PM2</strong> for process management and <strong>Nginx</strong> as a reverse proxy.
+        </p>
+        <h3>Why Use PM2 and Nginx?</h3>
+        <ul>
+          <li><b>PM2:</b> Keeps your Node.js app running, restarts it if it crashes, and makes startup on reboot easy.</li>
+          <li><b>Nginx:</b> Handles incoming web traffic, SSL, and can serve static files or load-balance multiple Node.js processes.</li>
+        </ul>
+        <h3>Step 1: Prepare Your Ubuntu Server</h3>
+        <pre><code>sudo apt update
+sudo apt upgrade -y
+</code></pre>
+        <h3>Step 2: Install Node.js and npm</h3>
+        <pre><code>curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+node -v
+npm -v
+</code></pre>
+        <h3>Step 3: Clone Your Node.js App</h3>
+        <pre><code>git clone https://github.com/yourusername/your-node-app.git
+cd your-node-app
+npm install
+</code></pre>
+        <h3>Step 4: Install and Use PM2</h3>
+        <pre><code>sudo npm install -g pm2
+pm2 start app.js --name "my-app"
+pm2 status
+pm2 logs my-app
+</code></pre>
+        <p>
+          To start your app on server reboot:
+        </p>
+        <pre><code>pm2 startup
+pm2 save
+</code></pre>
+        <h3>Step 5: Install and Configure Nginx</h3>
+        <pre><code>sudo apt install nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
+</code></pre>
+        <p>
+          Edit or create a new site config:
+        </p>
+        <pre><code>sudo nano /etc/nginx/sites-available/my-app</code></pre>
+        <p>
+          Example Nginx config for a Node.js app running on port 3000:
+        </p>
+        <pre><code>server {
+    listen 80;
+    server_name yourdomain.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+</code></pre>
+        <pre><code>sudo ln -s /etc/nginx/sites-available/my-app /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+</code></pre>
+        <h3>Step 6: (Optional) Enable HTTPS with Let's Encrypt</h3>
+        <pre><code>sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d yourdomain.com
+</code></pre>
+        <p>
+          Certbot will automatically update your Nginx config for SSL.
+        </p>
+        <h3>Step 7: Test Your Deployment</h3>
+        <ul>
+          <li>Visit <a href="http://yourdomain.com" target="_blank">http://yourdomain.com</a> (and <a href="https://yourdomain.com" target="_blank">https://yourdomain.com</a> if using SSL).</li>
+          <li>Your Node.js app should be live, managed by PM2, and fronted by Nginx!</li>
+        </ul>
+        <h3>Conclusion</h3>
+        <p>
+          With PM2 and Nginx, deploying Node.js apps on Ubuntu is reliable, scalable, and production-ready. PM2 keeps your app running, while Nginx provides SSL, reverse proxying, and static file serving. This stack is a proven choice for startups and enterprises alike.
+        </p>
+        <p>
+          <strong>Need help or want a custom deployment script? Contact me!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: Node.js, PM2, Nginx, DevOps, Tutorials</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
