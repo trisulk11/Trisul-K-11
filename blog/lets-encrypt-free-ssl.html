@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>How to Use Let’s Encrypt for Free SSL Certificates | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A step-by-step guide to securing your website with free SSL certificates from Let’s Encrypt. Learn how to install and renew HTTPS easily.">
+  <link rel="canonical" href="https://trisulk11.in/blog/lets-encrypt-free-ssl.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>How to Use Let’s Encrypt for Free SSL Certificates</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-21">May 21, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          Securing your website with HTTPS is essential for trust, SEO, and protecting user data. <strong>Let’s Encrypt</strong> makes it easy to get free SSL certificates for any domain. In this guide, you’ll learn how to install, configure, and auto-renew SSL with Let’s Encrypt on a Linux server.
+        </p>
+        <h3>What is Let’s Encrypt?</h3>
+        <p>
+          Let’s Encrypt is a free, automated, and open certificate authority. It provides SSL certificates that are trusted by all major browsers. Certificates are valid for 90 days and can be renewed automatically.
+        </p>
+        <h3>Step 1: Install Certbot</h3>
+        <pre><code>sudo apt update
+sudo apt install certbot python3-certbot-nginx
+</code></pre>
+        <p>
+          For Apache, use <code>python3-certbot-apache</code> instead.
+        </p>
+        <h3>Step 2: Obtain and Install Your Certificate</h3>
+        <pre><code>sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+</code></pre>
+        <p>
+          Certbot will ask for your email and agree to the terms. It will then automatically update your Nginx config and reload the server.
+        </p>
+        <h3>Step 3: Test Automatic Renewal</h3>
+        <pre><code>sudo certbot renew --dry-run
+</code></pre>
+        <p>
+          Certbot sets up a cron job or systemd timer to renew certificates automatically. You can check renewal logs at <code>/var/log/letsencrypt/</code>.
+        </p>
+        <h3>Step 4: Verify HTTPS</h3>
+        <ul>
+          <li>Visit <a href="https://yourdomain.com" target="_blank">https://yourdomain.com</a> and check for the padlock icon.</li>
+          <li>Use <a href="https://www.ssllabs.com/ssltest/" target="_blank">SSL Labs</a> to scan your site for SSL issues.</li>
+        </ul>
+        <h3>Troubleshooting Tips</h3>
+        <ul>
+          <li>Ports 80 and 443 must be open and reachable from the internet.</li>
+          <li>Your domain’s DNS must point to your server’s IP.</li>
+          <li>For firewalls, allow HTTP and HTTPS traffic.</li>
+        </ul>
+        <h3>Bonus: Using Let’s Encrypt with Other Web Servers</h3>
+        <p>
+          Let’s Encrypt works with Caddy, Apache, and even Dockerized web servers. See their documentation for integration steps.
+        </p>
+        <h3>Conclusion</h3>
+        <p>
+          With Let’s Encrypt and Certbot, securing your website with HTTPS is free, easy, and automatic. Don’t risk your users’ trust—enable SSL today!
+        </p>
+        <p>
+          <strong>Need help setting up SSL? Contact me for a custom solution!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: SSL, Let’s Encrypt, Security, Tutorials</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
