@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding BGP: The Backbone of the Internet | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A practical explanation of BGP, the protocol that routes traffic across the global internet. Learn how BGP works and why it matters.">
+  <link rel="canonical" href="https://trisulk11.in/blog/understanding-bgp.html">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f9fafb; margin: 0; padding: 0; }
+    header { background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%); color: #fff; padding: 32px 0 20px 0; text-align: center; border-bottom: 4px solid #21D4FD; }
+    header h1 { margin: 0; font-size: 2.5em; letter-spacing: 1px; }
+    header p { margin: 8px 0 0 0; font-size: 1.1em; font-weight: 500; }
+    main { max-width: 720px; margin: 32px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 14px rgba(34,58,94,0.08); padding: 32px 24px; }
+    article header { margin-bottom: 16px; border-bottom: 1px solid #e3e8ee; padding-bottom: 10px; background: none; color: #223A5E; }
+    article h2 { margin: 0 0 8px 0; color: #223A5E; font-size: 2em; }
+    .meta { font-size: 0.97em; color: #5a6a85; margin-bottom: 0; }
+    .meta time { color: #1FA2FF; font-weight: 500; margin-left: 5px; }
+    article section { margin-top: 20px; line-height: 1.7; color: #222; }
+    pre, code { background: #f3f6f9; color: #223A5E; font-family: 'Fira Mono', 'Consolas', monospace; padding: 2px 6px; border-radius: 4px; font-size: 1em; }
+    pre { display: block; padding: 12px; margin: 18px 0; overflow-x: auto; }
+    article footer { margin-top: 30px; font-size: 0.98em; color: #5a6a85; border-top: 1px solid #e3e8ee; padding-top: 8px; }
+    footer { background: #223A5E; color: #fff; text-align: center; padding: 20px 10px; position: fixed; width: 100%; bottom: 0; letter-spacing: 1px; }
+    footer a { color: #FFD600; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    @media (max-width: 800px) { main { margin: 18px 4px 80px 4px; padding: 18px 5vw; } footer { font-size: 0.95em; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>Understanding BGP: The Backbone of the Internet</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-21">May 21, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          If you’ve ever wondered how your data finds its way across the globe, the answer is <strong>BGP</strong>—the Border Gateway Protocol. After years of working with ISPs and enterprise networks, I can tell you: understanding BGP is essential for any network professional.
+        </p>
+        <h3>What is BGP?</h3>
+        <p>
+          BGP is the protocol that routes data between autonomous systems (AS)—the big networks that make up the internet. It’s how ISPs, data centers, and large organizations exchange routing information and choose the best path for your traffic.
+        </p>
+        <h3>Why BGP Matters</h3>
+        <ul>
+          <li><b>Global Routing:</b> BGP decides which path your packets take across the world.</li>
+          <li><b>Redundancy:</b> Allows for multiple connections to the internet, improving reliability.</li>
+          <li><b>Traffic Engineering:</b> Lets you control inbound and outbound routes for performance or cost.</li>
+          <li><b>Security:</b> Misconfigured or hijacked BGP routes can cause outages or security breaches.</li>
+        </ul>
+        <h3>How BGP Works: The Basics</h3>
+        <ul>
+          <li>Routers running BGP establish peerings with other routers (neighbors).</li>
+          <li>They exchange routing tables—lists of which networks they know how to reach.</li>
+          <li>BGP uses attributes (AS path, local preference, MED) to select the best route.</li>
+        </ul>
+        <h3>Sample: Configuring BGP on Cisco IOS</h3>
+        <pre><code>router bgp 65001
+ bgp log-neighbor-changes
+ neighbor 203.0.113.1 remote-as 65002
+ network 192.0.2.0 mask 255.255.255.0
+</code></pre>
+        <h3>BGP Best Practices</h3>
+        <ul>
+          <li>Always filter routes—never accept or advertise everything by default.</li>
+          <li>Use prefix lists and route maps to control what you send and receive.</li>
+          <li>Monitor BGP sessions and logs for instability or hijacks.</li>
+          <li>Document your AS numbers, peerings, and policies.</li>
+        </ul>
+        <h3>Conclusion</h3>
+        <p>
+          BGP is the glue that holds the internet together. Understanding its basics—and its risks—will make you a better network engineer and help you build more resilient, secure networks.
+        </p>
+        <p>
+          <strong>Want to dive deeper into BGP or need help with multi-homing? Reach out for expert advice!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: BGP, Routing, Internet, Tutorials</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
