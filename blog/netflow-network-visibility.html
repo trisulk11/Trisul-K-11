@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NetFlow: Unlocking Deep Network Visibility | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A veteran network engineer explains how NetFlow provides powerful traffic analytics for troubleshooting, capacity planning, and security.">
+  <link rel="canonical" href="https://trisulk11.in/blog/netflow-network-visibility.html">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f9fafb; margin: 0; padding: 0; }
+    header { background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%); color: #fff; padding: 32px 0 20px 0; text-align: center; border-bottom: 4px solid #21D4FD; }
+    header h1 { margin: 0; font-size: 2.5em; letter-spacing: 1px; }
+    header p { margin: 8px 0 0 0; font-size: 1.1em; font-weight: 500; }
+    main { max-width: 720px; margin: 32px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 14px rgba(34,58,94,0.08); padding: 32px 24px; }
+    article header { margin-bottom: 16px; border-bottom: 1px solid #e3e8ee; padding-bottom: 10px; background: none; color: #223A5E; }
+    article h2 { margin: 0 0 8px 0; color: #223A5E; font-size: 2em; }
+    .meta { font-size: 0.97em; color: #5a6a85; margin-bottom: 0; }
+    .meta time { color: #1FA2FF; font-weight: 500; margin-left: 5px; }
+    article section { margin-top: 20px; line-height: 1.7; color: #222; }
+    pre, code { background: #f3f6f9; color: #223A5E; font-family: 'Fira Mono', 'Consolas', monospace; padding: 2px 6px; border-radius: 4px; font-size: 1em; }
+    pre { display: block; padding: 12px; margin: 18px 0; overflow-x: auto; }
+    article footer { margin-top: 30px; font-size: 0.98em; color: #5a6a85; border-top: 1px solid #e3e8ee; padding-top: 8px; }
+    footer { background: #223A5E; color: #fff; text-align: center; padding: 20px 10px; position: fixed; width: 100%; bottom: 0; letter-spacing: 1px; }
+    footer a { color: #FFD600; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    @media (max-width: 800px) { main { margin: 18px 4px 80px 4px; padding: 18px 5vw; } footer { font-size: 0.95em; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>NetFlow: Unlocking Deep Network Visibility</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-21">May 21, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          If you want to truly understand what’s happening on your network, <strong>NetFlow</strong> is your best friend. For over a decade, I’ve relied on NetFlow data to troubleshoot slowdowns, detect security incidents, and plan for growth. Here’s why every serious network engineer should master NetFlow.
+        </p>
+        <h3>What is NetFlow?</h3>
+        <p>
+          NetFlow is a protocol developed by Cisco that collects metadata about IP traffic flowing through routers and switches. Unlike SNMP, which gives you counters, NetFlow tells you who talked to whom, when, for how long, and how much data was transferred.
+        </p>
+        <h3>Why Use NetFlow?</h3>
+        <ul>
+          <li><b>Traffic Analytics:</b> See top talkers, protocols, and destinations—crucial for troubleshooting and capacity planning.</li>
+          <li><b>Security:</b> Spot unusual flows, DDoS attacks, or data exfiltration in real time.</li>
+          <li><b>Compliance:</b> Maintain logs of network activity for audits and investigations.</li>
+        </ul>
+        <h3>How NetFlow Works</h3>
+        <ul>
+          <li>Routers/switches export flow records to a collector (e.g., nfdump, SolarWinds, ntopng).</li>
+          <li>Collectors analyze, store, and visualize the flow data.</li>
+        </ul>
+        <h3>Enabling NetFlow on Cisco IOS</h3>
+        <pre><code>conf t
+interface GigabitEthernet0/1
+ ip flow ingress
+ ip flow egress
+exit
+ip flow-export destination 192.168.1.100 2055
+ip flow-export version 9
+end
+write mem
+</code></pre>
+        <h3>Popular NetFlow Collectors</h3>
+        <ul>
+          <li><b>ntopng</b> (open source, great web UI)</li>
+          <li><b>SolarWinds NetFlow Traffic Analyzer</b> (enterprise-grade)</li>
+          <li><b>nfdump/nfsen</b> (lightweight, CLI-focused)</li>
+        </ul>
+        <h3>Best Practices</h3>
+        <ul>
+          <li>Filter sensitive flows to avoid privacy issues.</li>
+          <li>Retain flow data for as long as needed for compliance.</li>
+          <li>Use NetFlow in combination with SNMP for a complete monitoring solution.</li>
+        </ul>
+        <h3>Conclusion</h3>
+        <p>
+          NetFlow unlocks a new level of network visibility. Once you start using it, you’ll wonder how you ever managed without it. For troubleshooting, security, and planning, NetFlow is a must-have in every network pro’s toolkit.
+        </p>
+        <p>
+          <strong>Need help setting up NetFlow? Contact me for a custom solution!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: NetFlow, Network Monitoring, Analytics, Tutorials</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
