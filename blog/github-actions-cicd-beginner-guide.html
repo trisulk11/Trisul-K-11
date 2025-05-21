@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>A Beginner’s Guide to CI/CD with GitHub Actions | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to set up CI/CD pipelines using GitHub Actions. This beginner-friendly guide covers workflows, YAML, and practical automation tips.">
+  <link rel="canonical" href="https://trisulk11.in/blog/github-actions-cicd-beginner-guide.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>A Beginner’s Guide to CI/CD with GitHub Actions</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-21">May 21, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          Continuous Integration and Continuous Deployment (CI/CD) are essential for modern software development. <strong>GitHub Actions</strong> makes it easy to automate your build, test, and deployment pipelines directly from your GitHub repository. In this guide, you'll learn what GitHub Actions is, why it matters, and how to set up your first CI/CD workflow.<br>
+        </p>
+        <h3>What is GitHub Actions?</h3>
+        <p>
+          GitHub Actions is a native CI/CD and automation tool built into GitHub. It lets you define custom workflows—using simple YAML files—that run on every push, pull request, or other events in your repo. These workflows can install dependencies, run tests, build your code, and deploy to production—all automatically.<br>
+          <strong>Why use it?</strong>
+        </p>
+        <ul>
+          <li>Automates repetitive tasks and reduces manual errors</li>
+          <li>Runs tests and checks on every code change</li>
+          <li>Deploys your app automatically after a successful build</li>
+          <li>Integrates tightly with GitHub, making setup and management seamless</li>
+        </ul>
+        <h3>How Does GitHub Actions Work?</h3>
+        <p>
+          GitHub Actions uses <b>workflows</b> defined in YAML files inside the <code>.github/workflows/</code> folder of your repository. Each workflow is triggered by specific events (like pushes or PRs) and consists of jobs and steps. Each job runs on a GitHub-hosted runner (Linux, Windows, or macOS) and can execute scripts, use pre-built actions, or call external services.<br>
+          <strong>Example workflow structure:</strong>
+        </p>
+        <pre><code>.
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+</code></pre>
+        <h3>Creating Your First CI/CD Workflow</h3>
+        <ol>
+          <li><b>Create or choose a GitHub repository.</b></li>
+          <li><b>Add a workflow file:</b> In your repo, create <code>.github/workflows/ci.yml</code>.</li>
+          <li><b>Paste this sample workflow:</b></li>
+        </ol>
+        <pre><code>name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
+</code></pre>
+        <p>
+          This workflow runs whenever you push or create a pull request to <code>main</code>. It checks out your code, sets up Node.js, installs dependencies, and runs your tests. You can adapt this for Python, Java, or any language by changing the setup steps.<br>
+          <strong>Tip:</strong> Use the GitHub Actions tab in your repo to monitor workflow runs and debug failures.
+        </p>
+        <h3>Popular Use Cases for GitHub Actions</h3>
+        <ul>
+          <li><b>Continuous Integration:</b> Build and test code on every commit, ensuring quality and catching bugs early.</li>
+          <li><b>Continuous Deployment:</b> Deploy apps to cloud providers (AWS, Azure, Google Cloud) or static hosts automatically after tests pass.</li>
+          <li><b>Automation:</b> Lint code, format code, or run security scans on every PR.</li>
+          <li><b>Custom Workflows:</b> Send Slack notifications, label issues, or automate releases.</li>
+        </ul>
+        <h3>Using Pre-Built and Marketplace Actions</h3>
+        <p>
+          GitHub Actions Marketplace offers thousands of reusable actions for everything from code linting to cloud deployments. You can mix and match these in your workflows, or write your own custom actions for unique needs.<br>
+          <strong>Example: Deploy to GitHub Pages</strong>
+        </p>
+        <pre><code>- name: Deploy to GitHub Pages
+  uses: peaceiris/actions-gh-pages@v4
+  with:
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    publish_dir: ./public
+</code></pre>
+        <h3>Best Practices</h3>
+        <ul>
+          <li>Keep workflows fast—cache dependencies and only run necessary jobs</li>
+          <li>Use secrets for sensitive data (API keys, tokens)</li>
+          <li>Start with official or popular actions from the Marketplace</li>
+          <li>Check logs and test locally if workflows fail</li>
+        </ul>
+        <h3>Conclusion</h3>
+        <p>
+          GitHub Actions makes CI/CD and automation accessible to everyone, right from your repo. With just a few lines of YAML, you can build, test, and deploy your code automatically—saving time, reducing errors, and speeding up your development cycle.<br>
+          <strong>Ready to get started? Try adding a workflow to your next project and see the benefits for yourself!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: CI/CD, GitHub Actions, DevOps, Tutorials</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
