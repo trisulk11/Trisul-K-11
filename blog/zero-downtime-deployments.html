@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zero Downtime Deployments: Strategies and Tools | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to achieve zero downtime deployments for your web applications using proven strategies and modern tools.">
+  <link rel="canonical" href="https://trisulk11.in/blog/zero-downtime-deployments.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>Zero Downtime Deployments: Strategies and Tools</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-21">May 21, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          <strong>Zero downtime deployments</strong> are essential for modern web applications—users expect your site to be available 24/7, and even a few seconds of downtime can mean lost revenue or trust. In this article, you'll learn proven strategies and tools to achieve seamless deployments with no service interruption.
+        </p>
+        <h3>Why Zero Downtime Matters</h3>
+        <ul>
+          <li>Improves user experience and trust</li>
+          <li>Prevents lost sales and support tickets</li>
+          <li>Enables frequent, safe releases</li>
+        </ul>
+        <h3>Popular Strategies for Zero Downtime</h3>
+        <h4>1. Blue-Green Deployments</h4>
+        <p>
+          Run two identical environments (Blue and Green). Deploy to the idle one, test, then switch traffic over instantly. If something fails, roll back by switching traffic back.
+        </p>
+        <h4>2. Rolling Deployments</h4>
+        <p>
+          Gradually replace old app instances with new ones, one at a time. Load balancers route traffic only to healthy instances, ensuring no downtime.
+        </p>
+        <h4>3. Canary Releases</h4>
+        <p>
+          Deploy the new version to a small subset of users. If all goes well, gradually roll out to everyone. Great for catching issues early.
+        </p>
+        <h3>Tools That Make It Easy</h3>
+        <ul>
+          <li><b>Docker & Kubernetes:</b> Built-in support for rolling updates and health checks.</li>
+          <li><b>NGINX & HAProxy:</b> Can route traffic dynamically and check app health.</li>
+          <li><b>CI/CD Platforms (GitHub Actions, GitLab CI, Jenkins):</b> Automate deployment pipelines and rollbacks.</li>
+          <li><b>Cloud Providers (AWS Elastic Beanstalk, Google Cloud Run, Azure App Service):</b> Offer blue-green and rolling deployments out of the box.</li>
+        </ul>
+        <h3>Sample: Rolling Deployment with PM2</h3>
+        <pre><code>pm2 deploy ecosystem.config.js production
+</code></pre>
+        <p>
+          PM2 can zero-downtime reload your Node.js app using <code>pm2 reload all</code> or <code>pm2 deploy</code> with the right config.
+        </p>
+        <h3>Best Practices</h3>
+        <ul>
+          <li>Always run health checks on new instances before routing traffic</li>
+          <li>Use load balancers to control traffic flow</li>
+          <li>Automate rollbacks for failed deployments</li>
+          <li>Test your deployment strategy in staging before production</li>
+        </ul>
+        <h3>Conclusion</h3>
+        <p>
+          Zero downtime deployments are achievable for any team with the right strategy and tools. Start simple, automate where possible, and always monitor your releases. Your users—and your business—will thank you.
+        </p>
+        <p>
+          <strong>Need help setting up zero downtime deployments? Contact me for a custom solution!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: DevOps, Deployment, CI/CD, Tutorials</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
