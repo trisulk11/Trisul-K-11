@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.trisulk11.in/contact-us.html</loc>
-    <priority>0.8</priority>
-    <changefreq>yearly</changefreq>
+    <loc>https://www.trisulk11.in/bloghome.html</loc>
   </url>
   <url>
-    <loc>https://www.trisulk11.in/privacy-policy.html</loc>
-    <priority>0.6</priority>
-    <changefreq>yearly</changefreq>
+    <loc>https://trisulk11.in/bloghome.html</loc>
+  </url>
+  <url>
+    <loc>https://www.trisulk11.in/contact-us.html</loc>
+  </url>
+  <url>
+    <loc>https://www.trisulk11.in/blog/deploy-nodejs-pm2-nginx-ubuntu.html</loc>
+  </url>
+  <url>
+    <loc>https://www.trisulk11.in/blog/caddy-docker-domain-deployment.html</loc>
+  </url>
+  <url>
+    <loc>https://www.trisulk11.in/blog/dns-tools-troubleshooting.html</loc>
   </url>
   <url>
     <loc>https://www.trisulk11.in/blog/getting-started-with-docker.html</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://www.trisulk11.in/toolshome.html</loc>
-    <priority>0.9</priority>
-    <changefreq>weekly</changefreq>
+    <loc>https://www.trisulk11.in/blog/github-actions-cicd-beginner-guide.html</loc>
   </url>
   <url>
-    <loc>https://www.trisulk11.in/ipv4-subnet-calculator.html</loc>
-    <priority>0.7</priority>
+    <loc>https://www.trisulk11.in/blog/lets-encrypt-free-ssl.html</loc>
+  </url>
+  <url>
+    <loc>https://www.trisulk11.in/blog/netflow-network-visibility.html</loc>
+  </url>
+  <url>
+    <loc>https://www.trisulk11.in/blog/network-segmentation-vlans.html</loc>
+  </url>
+  <url>
+    <loc>https://www.trisulk11.in/blog/optimizing-core-web-vitals.html</loc>
+  </url>
+  <url>
+    <loc>https://trisulk11.in/blog/snmp-network-monitoring-guide.html</loc>
+  </url>
+  <url>
+    <loc>https://trisulk11.in/blog/understanding-bgp.html</loc>
+  </url>
+  <url>
+    <loc>https://trisulk11.in/blog/zero-downtime-deployments.html</loc>
   </url>
 </urlset>
