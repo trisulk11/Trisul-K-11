@@ -170,6 +170,73 @@
       background: linear-gradient(90deg, #21D4FD 0%, #1FA2FF 100%);
       color: #FFD600;
     }
+    
+    /* Blog Ads Section Styles */
+    .blog-ads {
+      margin-bottom: 36px;
+    }
+    .blog-ads h3 {
+      color: #1FA2FF;
+      margin-bottom: 20px;
+    }
+    .blog-banner-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .blog-banner {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(34,58,94,0.08);
+      border-left: 4px solid #1FA2FF;
+    }
+    .blog-banner h4 {
+      color: #223A5E;
+      margin: 0 0 12px 0;
+      font-size: 1.2em;
+    }
+    .blog-banner p {
+      margin: 0 0 16px 0;
+      line-height: 1.6;
+      color: #555;
+    }
+    .read-more-btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #1FA2FF 0%, #21D4FD 100%);
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 0.9em;
+      transition: background 0.2s, color 0.2s;
+    }
+    .read-more-btn:hover {
+      background: linear-gradient(90deg, #21D4FD 0%, #1FA2FF 100%);
+      color: #FFD600;
+    }
+    .blog-cta {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .blog-home-btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #223A5E 0%, #1FA2FF 100%);
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin: 0 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .blog-home-btn:hover {
+      background: linear-gradient(90deg, #1FA2FF 0%, #FFD600 100%);
+      color: #223A5E;
+    }
+    
     .cta {
       text-align: center;
       margin: 32px 0 0 0;
@@ -207,6 +274,7 @@
     footer a:hover {
       text-decoration: underline;
     }
+    
     /* DARK MODE */
     .dark-mode {
       background: #161b22 !important;
@@ -254,6 +322,36 @@
       background: linear-gradient(90deg, #1FA2FF 0%, #FFD600 100%) !important;
       color: #fff !important;
     }
+    
+    /* Dark mode styles for blog section */
+    .dark-mode .blog-banner {
+      background: #2a2e35 !important;
+      color: #f9fafb !important;
+      border-left: 4px solid #FFD600 !important;
+    }
+    .dark-mode .blog-banner h4 {
+      color: #FFD600 !important;
+    }
+    .dark-mode .blog-banner p {
+      color: #d1d5db !important;
+    }
+    .dark-mode .read-more-btn {
+      background: linear-gradient(90deg, #FFD600 0%, #1FA2FF 100%) !important;
+      color: #223A5E !important;
+    }
+    .dark-mode .read-more-btn:hover {
+      background: linear-gradient(90deg, #1FA2FF 0%, #FFD600 100%) !important;
+      color: #fff !important;
+    }
+    .dark-mode .blog-home-btn {
+      background: linear-gradient(90deg, #FFD600 0%, #1FA2FF 100%) !important;
+      color: #223A5E !important;
+    }
+    .dark-mode .blog-home-btn:hover {
+      background: linear-gradient(90deg, #1FA2FF 0%, #FFD600 100%) !important;
+      color: #fff !important;
+    }
+    
     @media (max-width: 800px) {
       main {
         margin: 18px 4px 32px 4px;
@@ -262,6 +360,20 @@
       .service-list {
         flex-direction: column;
         gap: 10px;
+      }
+      .blog-banner-list {
+        gap: 16px;
+      }
+      .blog-banner {
+        padding: 16px;
+      }
+      .blog-cta {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .blog-home-btn {
+        display: block;
+        margin: 5px 0;
       }
     }
   </style>
@@ -274,8 +386,8 @@
       <a href="https://www.trisulk11.in/">Home</a>
       <a href="https://www.trisulk11.in/contact-us.html">Contact Us</a>
       <a href="https://www.trisulk11.in/privacy-policy.html">Privacy Policy</a>
-      <a href="/sitemap.xml" class="sitemap-btn">Sitemap</a>
       <a href="https://www.trisulk11.in/bloghome.html">Blog Home</a>
+      <a href="/sitemap.xml" class="sitemap-btn">Sitemap</a>
       <button onclick="toggleDarkMode()" class="dark-toggle-btn" aria-label="Toggle dark mode">🌙 Dark Mode</button>
     </nav>
   </header>
@@ -309,42 +421,41 @@
           Technical SEO audits, keyword research, and performance optimization.
           <a href="https://www.trisulk11.in/contact-us.html" class="request-btn">Request</a>
         </li>
-<li class="service-item">
-  <strong>AWS Network Architecture & VPC Design</strong><br>
-  Design and implement VPC networks with subnets, route tables, security groups, and internet gateways for scalable cloud infrastructure.
-  <a href="https://www.trisulk11.in/contact-us.html" class="request-btn">Request</a>
-</li>
-
+        <li class="service-item">
+          <strong>AWS Network Architecture & VPC Design</strong><br>
+          Design and implement VPC networks with subnets, route tables, security groups, and internet gateways for scalable cloud infrastructure.
+          <a href="https://www.trisulk11.in/contact-us.html" class="request-btn">Request</a>
+        </li>
       </ul>
     </section>
-
+    
+    <section class="blog-ads">
+      <h3>Latest Blog Posts</h3>
+      <div class="blog-banner-list">
+        <div class="blog-banner">
+          <h4>Combining Caddy and Docker for Modern Web Deployment</h4>
+          <p>Combining Caddy and Docker is one of the fastest ways to deploy modern web applications with automatic HTTPS and clean configuration. In this guide, you'll learn how to set up Caddy as a reverse proxy in Docker, connect it to your app, and serve it over your custom domain with SSL—all in just a few steps.</p>
+          <a href="https://www.trisulk11.in/blog/caddy-docker-domain-deployment.html" class="read-more-btn">Read More</a>
+        </div>
+        
+        <div class="blog-banner">
+          <h4>Deploying a Node.js App with PM2 and Nginx on Ubuntu</h4>
+          <p><strong>Written by Trisul · May 21, 2025</strong><br>
+          Deploying Node.js applications in production requires more than just running node app.js. You need process management, auto-restarts, and a way to serve your app securely over HTTP/HTTPS. In this guide, you'll learn how to deploy a Node.js app on Ubuntu using PM2 for process management and Nginx as a reverse proxy.</p>
+          <a href="https://www.trisulk11.in/blog/deploy-nodejs-pm2-nginx-ubuntu.html" class="read-more-btn">Read More</a>
+        </div>
+      </div>
+      
+      <div class="blog-cta">
+        <a href="https://www.trisulk11.in/bloghome.html" class="blog-home-btn">Read More Articles</a>
+        <a href="https://www.trisulk11.in/bloghome.html" class="blog-home-btn">Blog Home</a>
+      </div>
+    </section>
 
     <div class="cta">
       <a href="https://www.trisulk11.in/contact-us.html">Request a Quote</a>
     </div>
   </main>
-<section class="blog-ads">
-  <h3>Latest Blog Posts</h3>
-  <div class="blog-banner-list">
-    <div class="blog-banner">
-      <h4>Combining Caddy and Docker for Modern Web Deployment</h4>
-      <p>Combining Caddy and Docker is one of the fastest ways to deploy modern web applications with automatic HTTPS and clean configuration. In this guide, you'll learn how to set up Caddy as a reverse proxy in Docker, connect it to your app, and serve it over your custom domain with SSL—all in just a few steps.</p>
-      <a href="https://www.trisulk11.in/blog/caddy-docker-domain-deployment.html" class="read-more-btn">Read More</a>
-    </div>
-    
-    <div class="blog-banner">
-      <h4>Deploying a Node.js App with PM2 and Nginx on Ubuntu</h4>
-      <p><strong>Written by Trisul · May 21, 2025</strong><br>
-      Deploying Node.js applications in production requires more than just running node app.js. You need process management, auto-restarts, and a way to serve your app securely over HTTP/HTTPS. In this guide, you'll learn how to deploy a Node.js app on Ubuntu using PM2 for process management and Nginx as a reverse proxy.</p>
-      <a href="https://www.trisulk11.in/blog/deploy-nodejs-pm2-nginx-ubuntu.html" class="read-more-btn">Read More</a>
-    </div>
-  </div>
-  
-  <div class="blog-cta">
-    <a href="https://www.trisulk11.in/bloghome.html" class="blog-home-btn">Read More Articles</a>
-    <a href="https://www.trisulk11.in/bloghome.html" class="blog-home-btn">Blog Home</a>
-  </div>
-</section>
   <footer>
     <p>
       <a href="https://www.trisulk11.in/privacy-policy.html">Privacy Policy</a> |
