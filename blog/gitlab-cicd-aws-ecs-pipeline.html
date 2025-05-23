@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GitLab CI/CD with AWS ECS: Complete Deployment Pipeline | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Build robust CI/CD pipelines that automatically deploy containerized applications to AWS ECS with GitLab Runner.">
+  <link rel="canonical" href="https://trisulk11.in/blog/gitlab-cicd-aws-ecs-pipeline.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>GitLab CI/CD with AWS ECS: Complete Deployment Pipeline</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-18">May 18, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          Building robust CI/CD pipelines that automatically deploy containerized applications to AWS ECS requires careful orchestration of GitLab Runner, Docker image building, security scanning, and deployment strategies. This tutorial covers everything from pipeline configuration to blue-green deployments with rollback capabilities.
+        </p>
+        <h3>Pipeline Architecture Overview</h3>
+        <ul>
+          <li><b>Source:</b> GitLab repository with application code</li>
+          <li><b>Build:</b> Docker image creation and testing</li>
+          <li><b>Security:</b> Container image vulnerability scanning</li>
+          <li><b>Deploy:</b> AWS ECS service deployment with rolling updates</li>
+        </ul>
+        <h3>Step 1: Set Up GitLab Runner on AWS</h3>
+        <pre><code># Launch EC2 instance for GitLab Runner
+aws ec2 run-instances --image-id ami-0abcdef1234567890 --count 1 --instance-type t3.medium --key-name my-key --security-group-ids sg-12345678 --subnet-id subnet-12345678
+
+# Install GitLab Runner
+curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | sudo bash
+sudo apt-get install gitlab-runner
+
+# Register runner with GitLab
+sudo gitlab-runner register \
+  --url "https://gitlab.com/" \
+  --registration-token "YOUR_REGISTRATION_TOKEN" \
+  --executor "docker" \
+  --docker-image "alpine
