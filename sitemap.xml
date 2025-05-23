@@ -1,48 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.trisulk11.in/bloghome.html</loc>
-  </url>
-  <url>
-    <loc>https://trisulk11.in/bloghome.html</loc>
-  </url>
-  <url>
-    <loc>https://www.trisulk11.in/contact-us.html</loc>
-  </url>
-  <url>
-    <loc>https://www.trisulk11.in/blog/deploy-nodejs-pm2-nginx-ubuntu.html</loc>
-  </url>
-  <url>
-    <loc>https://www.trisulk11.in/blog/caddy-docker-domain-deployment.html</loc>
-  </url>
-  <url>
-    <loc>https://www.trisulk11.in/blog/dns-tools-troubleshooting.html</loc>
-  </url>
-  <url>
-    <loc>https://www.trisulk11.in/blog/getting-started-with-docker.html</loc>
-  </url>
-  <url>
-    <loc>https://www.trisulk11.in/blog/github-actions-cicd-beginner-guide.html</loc>
-  </url>
-  <url>
-    <loc>https://www.trisulk11.in/blog/lets-encrypt-free-ssl.html</loc>
-  </url>
-  <url>
-    <loc>https://www.trisulk11.in/blog/netflow-network-visibility.html</loc>
-  </url>
-  <url>
-    <loc>https://www.trisulk11.in/blog/network-segmentation-vlans.html</loc>
-  </url>
-  <url>
-    <loc>https://www.trisulk11.in/blog/optimizing-core-web-vitals.html</loc>
-  </url>
-  <url>
-    <loc>https://trisulk11.in/blog/snmp-network-monitoring-guide.html</loc>
-  </url>
-  <url>
-    <loc>https://trisulk11.in/blog/understanding-bgp.html</loc>
-  </url>
-  <url>
-    <loc>https://trisulk11.in/blog/zero-downtime-deployments.html</loc>
-  </url>
+<url>
+<loc>https://www.trisulk11.in/</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>1.0</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/bloghome.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/contact-us.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/privacy-policy.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/deploy-nodejs-pm2-nginx-ubuntu.html</loc>
+<lastmod>2025-05-21</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/caddy-docker-domain-deployment.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/dns-tools-troubleshooting.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/getting-started-with-docker.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/github-actions-cicd-beginner-guide.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/lets-encrypt-free-ssl.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/netflow-network-visibility.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/network-segmentation-vlans.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/optimizing-core-web-vitals.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/snmp-network-monitoring-guide.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/understanding-bgp.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/zero-downtime-deployments.html</loc>
+<lastmod>2025-05-23</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/aws-vpc-network-architecture.html</loc>
+<lastmod>2025-05-22</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/kubernetes-networking-guide.html</loc>
+<lastmod>2025-05-20</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/active-directory-advanced-configuration.html</loc>
+<lastmod>2025-05-19</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/gitlab-cicd-aws-ecs-pipeline.html</loc>
+<lastmod>2025-05-18</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/network-latency-troubleshooting-guide.html</loc>
+<lastmod>2025-05-17</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/container-security-kubernetes-docker.html</loc>
+<lastmod>2025-05-16</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.trisulk11.in/blog/windows-server-hyperv-clustering.html</loc>
+<lastmod>2025-05-14</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
 </urlset>
