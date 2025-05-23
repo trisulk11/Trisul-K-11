@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Container Security: Securing Docker and Kubernetes Workloads | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to implement runtime protection, network policies, RBAC, and security contexts in containerized environments.">
+  <link rel="canonical" href="https://trisulk11.in/blog/container-security-kubernetes-docker.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>Container Security: Securing Docker and Kubernetes Workloads</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-16">May 16, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          Container security goes beyond image scanning. Learn how to implement runtime protection, network policies, RBAC, and security contexts in Kubernetes. This guide covers practical examples of securing containerized applications from development to production with defense-in-depth strategies.
+        </p>
+        <h3>Container Security Layers</h3>
+        <ul>
+          <li><b>Image Security:</b> Vulnerability scanning and base image hardening</li>
+          <li><b>Runtime Security:</b> Container behavior monitoring and anomaly detection</li>
+          <li><b>Network Security:</b> Microsegmentation and traffic encryption</li>
+          <li><b>Platform Security:</b> Kubernetes RBAC and admission controllers</li>
+        </ul>
+        <h3>Step 1: Secure Docker Images</h3>
+        <pre><code># Multi-stage Dockerfile for security
+FROM node:16-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+FROM node:16-alpine AS runtime
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001
+WORKDIR /app
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --chown=nextjs:nodejs . .
+USER nextjs
+EXPOSE 3000
+CMD ["node", "server.js"]
+
+# Scan image for vulnerabilities
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy:latest \
+  image my-app:latest
+</code></pre>
+        <h3>Step 2: Implement Pod Security Standards</h3>
+        <pre><code># Pod Security Context
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-pod
+spec:
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+    runAsGroup: 1001
+    fsGroup: 1001
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+  - name: app
+    image: my-app:latest
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+        - ALL
+    volumeMounts:
+    - name: tmp
+      mountPath: /tmp
+    - name: cache
+      mountPath: /app/.cache
+  volumes:
+  - name: tmp
+    emptyDir: {}
+  - name: cache
+    emptyDir: {}
+</code></pre>
+        <h3>Step 3: Configure Network Policies</h3>
+        <pre><code># Default deny all ingress traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: production
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+
+# Allow specific communication between services
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-backend
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 8080
+</code></pre>
+        <h3>Step 4: Implement RBAC</h3>
+        <pre><code># Service Account for application
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-service-account
+  namespace: production
+
+# Role with minimal permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: production
+  name: app-role
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+
+# Bind role to service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: app-role-binding
+  namespace: production
+subjects:
+- kind: ServiceAccount
+  name: app-service-account
+  namespace: production
+roleRef:
+  kind: Role
+  name: app-role
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+        <h3>Step 5: Set Up Admission Controllers</h3>
+        <pre><code># Pod Security Policy (deprecated, use Pod Security Standards)
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: restricted
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  requiredDropCapabilities:
+    - ALL
+  volumes:
+    - 'configMap'
+    - 'emptyDir'
+    - 'projected'
+    - 'secret'
+    - 'downwardAPI'
+    - 'persistentVolumeClaim'
+  runAsUser:
+    rule: 'MustRunAsNonRoot'
+  seLinux:
+    rule: 'RunAsAny'
+  fsGroup:
+    rule: 'RunAsAny'
+
+# OPA Gatekeeper constraint
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredsecuritycontext
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredSecurityContext
+      validation:
+        properties:
+          runAsNonRoot:
+            type: boolean
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredsecuritycontext
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.securityContext.runAsNonRoot
+          msg := "Container must run as non-root user"
+        }
+</code></pre>
+        <h3>Step 6: Runtime Security Monitoring</h3>
+        <pre><code># Falco rules for runtime security
+- rule: Unexpected outbound connection
+  desc: Detect unexpected outbound connections
+  condition: >
+    outbound and not fd.typechar = 4 and not fd.is_unix_socket and not proc.name in (curl, wget)
+  output: >
+    Unexpected outbound connection (user=%user.name command=%proc.cmdline 
+    connection=%fd.name container_id=%container.id image=%container.image.repository)
+  priority: WARNING
+
+# Deploy Falco as DaemonSet
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: falco
+  namespace: falco
+spec:
+  selector:
+    matchLabels:
+      app: falco
+  template:
+    metadata:
+      labels:
+        app: falco
+    spec:
+      serviceAccount: falco
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - name: falco
+        image: falcosecurity/falco:latest
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /host/var/run/docker.sock
+          name: docker-socket
+        - mountPath: /host/dev
+          name: dev-fs
+        - mountPath: /host/proc
+          name: proc-fs
+          readOnly: true
+        - mountPath: /host/boot
+          name: boot-fs
+          readOnly: true
+        - mountPath: /host/lib/modules
+          name: lib-modules
+          readOnly: true
+      volumes:
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
+      - name: dev-fs
+        hostPath:
+          path: /dev
+      - name: proc-fs
+        hostPath:
+          path: /proc
+      - name: boot-fs
+        hostPath:
+          path: /boot
+      - name: lib-modules
+        hostPath:
+          path: /lib/modules
+</code></pre>
+        <h3>Step 7: Image Signing and Verification</h3>
+        <pre><code># Sign container images with Cosign
+cosign generate-key-pair
+cosign sign --key cosign.key my-registry/my-app:v1.0.0
+
+# Verify signatures in admission controller
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-image-signature
+spec:
+  validationFailureAction: enforce
+  background: false
+  rules:
+  - name: verify-signature
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    verifyImages:
+    - imageReferences:
+      - "my-registry/*"
+      attestors:
+      - entries:
+        - keys:
+            publicKeys: |-
+              -----BEGIN PUBLIC KEY-----
+              MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE...
+              -----END PUBLIC KEY-----
+</code></pre>
+        <h3>Best Practices</h3>
+        <ul>
+          <li>Use minimal base images like Alpine or distroless</li>
+          <li>Implement image vulnerability scanning in CI/CD pipelines</li>
+          <li>Enable audit logging for security events</li>
+          <li>Use service mesh for encrypted communication</li>
+          <li>Regularly update and patch container images</li>
+        </ul>
+        <h3>Conclusion</h3>
+        <p>
+          Container security requires a layered approach covering images, runtime, network, and platform security. By implementing these practices, you can build secure containerized applications that meet enterprise security requirements while maintaining operational efficiency.
+        </p>
+        <p>
+          <strong>Need help securing your container infrastructure? Let's discuss your security requirements!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: Container Security, Docker, Kubernetes, DevSecOps, Runtime Protection</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
