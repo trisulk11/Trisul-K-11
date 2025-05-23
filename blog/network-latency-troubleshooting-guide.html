@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Troubleshooting Network Latency: Advanced Diagnostics and Solutions | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master network troubleshooting techniques for identifying and resolving latency issues with packet analysis and optimization strategies.">
+  <link rel="canonical" href="https://trisulk11.in/blog/network-latency-troubleshooting-guide.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>Troubleshooting Network Latency: Advanced Diagnostics and Solutions</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-13">May 13, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          Master network troubleshooting techniques for identifying and resolving latency issues. This guide covers packet analysis with Wireshark, traceroute interpretation, QoS configuration, and optimization strategies for both LAN and WAN environments.
+        </p>
+        <h3>Latency Troubleshooting Methodology</h3>
+        <ul>
+          <li><b>Baseline Measurement:</b> Establish normal performance metrics</li>
+          <li><b>Layer-by-Layer Analysis:</b> OSI model systematic approach</li>
+          <li><b>Packet Analysis:</b> Deep inspection with Wireshark</li>
+          <li><b>Path Analysis:</b> Traceroute and MTR for route optimization</li>
+        </ul>
+        <h3>Step 1: Initial Latency Assessment</h3>
+        <pre><code># Basic connectivity and latency testing
+ping -c 10 8.8.8.8
+ping -c 10 -s 1472 8.8.8.8  # Test with larger packets
+
+# Continuous monitoring
+ping -i 0.2 -c 100 target-server.com | tee ping-results.txt
+
+# Test different packet sizes
+for size in 64 128 256 512 1024 1472; do
+  echo "Testing packet size: $size"
+  ping -c 5 -s $size 8.8.8.8 | grep "time="
+done
+
+# Measure jitter and packet loss
+mtr --report --report-cycles 100 target-server.com
+
+# Test TCP connection establishment time
+time telnet target-server.com 80
+</code></pre>
+        <h3>Step 2: Advanced Traceroute Analysis</h3>
+        <pre><code># Enhanced traceroute with timing
+traceroute -I -q 3 target-server.com
+
+# TCP traceroute for firewall traversal
+traceroute -T -p 80 target-server.com
+
+# UDP traceroute with specific port
+traceroute -U -p 53 target-server.com
+
+# Paris traceroute for ECMP path discovery
+paris-traceroute target-server.com
+
+# Analyze traceroute results
+#!/bin/bash
+echo "Hop Analysis for $1"
+traceroute $1 | while read line; do
+  hop=$(echo $line | awk '{print $1}')
+  ip=$(echo $line | awk '{print $2}')
+  time1=$(echo $line | awk '{print $4}')
+  time2=$(echo $line | awk '{print $6}')
+  time3=$(echo $line | awk '{print $8}')
+  
+  if [[ $hop =~ ^[0-9]+$ ]]; then
+    avg_time=$(echo "scale=2; ($time1 + $time2 + $time3) / 3" | bc)
+    echo "Hop $hop ($ip): Average RTT = ${avg_time}ms"
+  fi
+done
+</code></pre>
+        <h3>Step 3: Wireshark Packet Analysis</h3>
+        <pre><code># Capture packets with specific filters
+# Capture HTTP traffic with timing analysis
+tshark -i eth0 -f "port 80" -T fields -e frame.time_relative -e ip.src -e ip.dst -e tcp.analysis.ack_rtt
+
+# Capture and analyze TCP handshake timing
+tshark -i eth0 -f "tcp[tcpflags] & (tcp-syn|tcp-ack) != 0" -T fields -e frame.time_relative -e ip.src -e ip.dst -e tcp.flags
+
+# Analyze TCP window scaling and congestion
+tshark -i eth0 -f "host target-server.com" -T fields -e frame.time_relative -e tcp.window_size -e tcp.analysis.bytes_in_flight
+
+# Wireshark display filters for latency analysis
+# High RTT connections
+tcp.analysis.ack_rtt > 0.1
+
+# TCP retransmissions
+tcp.analysis.retransmission
+
+# TCP duplicate ACKs
+tcp.analysis.duplicate_ack
+
+# TCP zero window
+tcp.analysis.zero_window
+
+# Out of order packets
+tcp.analysis.out_of_order
+</code></pre>
+        <h3>Step 4: Network Interface Analysis</h3>
+        <pre><code># Check interface statistics
+ip -s link show eth0
+cat /proc/net/dev
+
+# Monitor interface errors and drops
+watch -
