@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kubernetes Networking Deep Dive: CNI, Service Mesh, and Ingress | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master Kubernetes networking concepts from CNI plugins to service mesh implementations for production clusters.">
+  <link rel="canonical" href="https://trisulk11.in/blog/kubernetes-networking-guide.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>Kubernetes Networking Deep Dive: CNI, Service Mesh, and Ingress</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-20">May 20, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          Kubernetes networking can seem complex, but understanding the core concepts of CNI plugins, services, ingress controllers, and service mesh will help you build robust, scalable applications. This guide covers everything from pod-to-pod communication to advanced traffic management patterns.
+        </p>
+        <h3>Kubernetes Network Model</h3>
+        <ul>
+          <li><b>Pod Network:</b> Each pod gets its own IP address</li>
+          <li><b>Service Network:</b> Stable endpoints for pod groups</li>
+          <li><b>Ingress:</b> External access to services</li>
+          <li><b>Network Policies:</b> Traffic filtering and security</li>
+        </ul>
+        <h3>Step 1: Understanding CNI Plugins</h3>
+        <pre><code># Popular CNI plugins
+- Calico: Network policies and BGP routing
+- Flannel: Simple overlay networking
+- Weave: Mesh networking with encryption
+- Cilium: eBPF-based networking and security
+
+# Check current CNI
+kubectl get pods -n kube-system | grep -E "calico|flannel|weave|cilium"
+</code></pre>
+        <h3>Step 2: Service Types and Load Balancing</h3>
+        <pre><code># ClusterIP Service (internal only)
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP
+
+# LoadBalancer Service (external access)
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer
+</code></pre>
+        <h3>Step 3: Ingress Controller Setup</h3>
+        <pre><code># Install NGINX Ingress Controller
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
+
+# Verify installation
+kubectl get pods -n ingress-nginx
+kubectl get svc -n ingress-nginx
+</code></pre>
+        <h3>Step 4: Configure Ingress Rules</h3>
+        <pre><code># Ingress with SSL termination
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - app.example.com
+    secretName: app-tls
+  rules:
+  - host: app.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 80
+</code></pre>
+        <h3>Step 5: Network Policies for Security</h3>
+        <pre><code># Deny all ingress traffic by default
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+
+# Allow specific traffic between tiers
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-netpol
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 8080
+</code></pre>
+        <h3>Step 6: Service Mesh with Istio</h3>
+        <pre><code># Install Istio
+curl -L https://istio.io/downloadIstio | sh -
+cd istio-*
+export PATH=$PWD/bin:$PATH
+istioctl install --set values.defaultRevision=default
+
+# Enable sidecar injection
+kubectl label namespace default istio-injection=enabled
+
+# Traffic management with VirtualService
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: backend-vs
+spec:
+  http:
+  - match:
+    - headers:
+        version:
+          exact: v2
+    route:
+    - destination:
+        host: backend-service
+        subset: v2
+  - route:
+    - destination:
+        host: backend-service
+        subset: v1
+      weight: 90
+    - destination:
+        host: backend-service
+        subset: v2
+      weight: 10
+</code></pre>
+        <h3>Monitoring and Troubleshooting</h3>
+        <pre><code># Check pod connectivity
+kubectl exec -it pod-name -- nslookup service-name
+
+# Monitor network traffic
+kubectl logs -f deployment/ingress-nginx-controller -n ingress-nginx
+
+# Debug DNS resolution
+kubectl run -it --rm debug --image=busybox --restart=Never -- nslookup kubernetes.default
+
+# Check network policies
+kubectl describe networkpolicy policy-name
+</code></pre>
+        <h3>Best Practices</h3>
+        <ul>
+          <li>Use network policies to implement zero-trust networking</li>
+          <li>Monitor network performance with tools like Prometheus</li>
+          <li>Implement proper service mesh observability</li>
+          <li>Use ingress controllers for SSL termination</li>
+          <li>Plan IP address ranges to avoid conflicts</li>
+        </ul>
+        <h3>Conclusion</h3>
+        <p>
+          Kubernetes networking provides powerful primitives for building scalable, secure applications. By understanding CNI, services, ingress, and service mesh concepts, you can design networks that meet enterprise requirements for performance, security, and observability.
+        </p>
+        <p>
+          <strong>Need help with your Kubernetes networking architecture? Let's connect!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: Kubernetes, Networking, CNI, Service Mesh, Container Orchestration</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
