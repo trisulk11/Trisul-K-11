@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Active Directory Domain Services: Advanced Configuration and Security | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Build enterprise-grade Active Directory environments with proper OU structure, Group Policy management, and security hardening.">
+  <link rel="canonical" href="https://trisulk11.in/blog/active-directory-advanced-configuration.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>Active Directory Domain Services: Advanced Configuration and Security</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-19">May 19, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          Building enterprise-grade Active Directory environments requires careful planning of organizational units, Group Policy design, and security hardening. This comprehensive guide covers AD DS deployment, advanced configuration, and integration with modern cloud services like Azure AD.
+        </p>
+        <h3>AD DS Architecture Planning</h3>
+        <ul>
+          <li><b>Forest Design:</b> Single vs. multiple forest considerations</li>
+          <li><b>Domain Structure:</b> Geographic vs. administrative boundaries</li>
+          <li><b>OU Design:</b> Delegation and Group Policy application</li>
+          <li><b>Site Topology:</b> Replication and authentication optimization</li>
+        </ul>
+        <h3>Step 1: Install and Configure AD DS</h3>
+        <pre><code># Install AD DS role
+Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
+
+# Promote server to domain controller
+Install-ADDSForest -DomainName "contoso.com" -DomainNetbiosName "CONTOSO" -InstallDns -SafeModeAdministratorPassword (ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force)
+
+# Verify installation
+Get-ADDomain
+Get-ADForest
+</code></pre>
+        <h3>Step 2: Design Organizational Unit Structure</h3>
+        <pre><code># Create top-level OUs
+New-ADOrganizationalUnit -Name "Corporate" -Path "DC=contoso,DC=com"
+New-ADOrganizationalUnit -Name "Servers" -Path "DC=contoso,DC=com"
+New-ADOrganizationalUnit -Name "Workstations" -Path "DC=contoso,DC=com"
+New-ADOrganizationalUnit -Name "Service Accounts" -Path "DC=contoso,DC=com"
+
+# Create departmental OUs
+New-ADOrganizationalUnit -Name "IT" -Path "OU=Corporate,DC=contoso,DC=com"
+New-ADOrganizationalUnit -Name "HR" -Path "OU=Corporate,DC=contoso,DC=com"
+New-ADOrganizationalUnit -Name "Finance" -Path "OU=Corporate,DC=contoso,DC=com"
+
+# Create sub-OUs for users and groups
+New-ADOrganizationalUnit -Name "Users" -Path "OU=IT,OU=Corporate,DC=contoso,DC=com"
+New-ADOrganizationalUnit -Name "Groups" -Path "OU=IT,OU=Corporate,DC=contoso,DC=com"
+</code></pre>
+        <h3>Step 3: Configure Group Policy Objects</h3>
+        <pre><code># Create security baseline GPO
+New-GPO -Name "Security Baseline" -Comment "Enterprise security settings"
+
+# Configure password policy
+Set-ADDefaultDomainPasswordPolicy -Identity contoso.com -MinPasswordLength 12 -PasswordHistoryCount 24 -MaxPasswordAge 90.00:00:00 -MinPasswordAge 1.00:00:00 -ComplexityEnabled $true
+
+# Import security templates
+Import-Module GroupPolicy
+$gpo = Get-GPO -Name "Security Baseline"
+Import-GPO -BackupGpoName "Security Template" -TargetName "Security Baseline" -Path "C:\GPOBackups"
+
+# Link GPO to domain
+New-GPLink -Name "Security Baseline" -Target "DC=contoso,DC=com"
+</code></pre>
+        <h3>Step 4: Implement Fine-Grained Password Policies</h3>
+        <pre><code># Create password settings object for administrators
+New-ADFineGrainedPasswordPolicy -Name "Admin Password Policy" -Precedence 10 -MinPasswordLength 15 -PasswordHistoryCount 24 -MaxPasswordAge 60.00:00:00 -MinPasswordAge 1.00:00:00 -ComplexityEnabled $true -ReversibleEncryptionEnabled $false -LockoutDuration 00:30:00 -LockoutObservationWindow 00:30:00 -LockoutThreshold 3
+
+# Apply to Domain Admins group
+Add-ADFineGrainedPasswordPolicySubject -Identity "Admin Password Policy" -Subjects "Domain Admins"
+
+# Create policy for service accounts
+New-ADFineGrainedPasswordPolicy -Name "Service Account Policy" -Precedence 20 -MinPasswordLength 20 -PasswordHistoryCount 12 -MaxPasswordAge 365.00:00:00 -MinPasswordAge 1.00:00:00 -ComplexityEnabled $true -ReversibleEncryptionEnabled $false -LockoutThreshold 0
+</code></pre>
+        <h3>Step 5: Configure Sites and Replication</h3>
+        <pre><code># Create additional sites
+New-ADReplicationSite -Name "Branch-Office-1"
+New-ADReplicationSite -Name "Branch-Office-2"
+
+# Create subnets
+New-ADReplicationSubnet -Name "192.168.1.0/24" -Site "Default-First-Site-Name"
+New-ADReplicationSubnet -Name "192.168.10.0/24" -Site "Branch-Office-1"
+New-ADReplicationSubnet -Name "192.168.20.0/24" -Site "Branch-Office-2"
+
+# Create site links
+New-ADReplicationSiteLink -Name "HQ-to-Branch1" -SitesIncluded "Default-First-Site-Name","Branch-Office-1" -Cost 100 -ReplicationFrequencyInMinutes 180
+
+# Configure replication schedule
+Set-ADReplicationSiteLink -Identity "HQ-to-Branch1" -ReplicationSchedule @(0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0)
+</code></pre>
+        <h3>Step 6: Security Hardening</h3>
+        <pre><code># Enable advanced audit policies
+auditpol /set /subcategory:"Logon" /success:enable /failure:enable
+auditpol /set /subcategory:"Account Logon" /success:enable /failure:enable
+auditpol /set /subcategory:"Directory Service Access" /success:enable /failure:enable
+
+# Configure LDAP signing and channel binding
+Set-ADDomainController -Identity $env:COMPUTERNAME -LDAPServerIntegrity $true
+
+# Disable legacy protocols
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters" -Name "LDAPServerIntegrity" -Value 2
+
+# Configure Kerberos settings
+Set-ADDomain -Identity contoso.com -KerberosEncryptionType AES128,AES256
+</code></pre>
+        <h3>Step 7: Azure AD Integration</h3>
+        <pre><code># Install Azure AD Connect
+# Download from: https://www.microsoft.com/en-us/download/details.aspx?id=47594
+
+# Configure hybri
