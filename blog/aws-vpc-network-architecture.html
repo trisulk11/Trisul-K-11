@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Building Secure AWS VPC Networks: Complete Architecture Guide | Trisul Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to design and implement secure VPC networks with proper subnet segmentation, route tables, and security groups.">
+  <link rel="canonical" href="https://trisulk11.in/blog/aws-vpc-network-architecture.html">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #223A5E 60%, #1FA2FF 100%);
+      color: #fff;
+      padding: 32px 0 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #21D4FD;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(34,58,94,0.08);
+      padding: 32px 24px;
+    }
+    article header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e3e8ee;
+      padding-bottom: 10px;
+      background: none;
+      color: #223A5E;
+    }
+    article h2 {
+      margin: 0 0 8px 0;
+      color: #223A5E;
+      font-size: 2em;
+    }
+    .meta {
+      font-size: 0.97em;
+      color: #5a6a85;
+      margin-bottom: 0;
+    }
+    .meta time {
+      color: #1FA2FF;
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    article section {
+      margin-top: 20px;
+      line-height: 1.7;
+      color: #222;
+    }
+    pre, code {
+      background: #f3f6f9;
+      color: #223A5E;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    pre {
+      display: block;
+      padding: 12px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    article footer {
+      margin-top: 30px;
+      font-size: 0.98em;
+      color: #5a6a85;
+      border-top: 1px solid #e3e8ee;
+      padding-top: 8px;
+    }
+    footer {
+      background: #223A5E;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      letter-spacing: 1px;
+    }
+    footer a {
+      color: #FFD600;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 800px) {
+      main {
+        margin: 18px 4px 80px 4px;
+        padding: 18px 5vw;
+      }
+      footer {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Trisul's Blog</h1>
+    <p>Network & Cloud Engineering Insights</p>
+  </header>
+  <main>
+    <article>
+      <header>
+        <h2>Building Secure AWS VPC Networks: Complete Architecture Guide</h2>
+        <div class="meta">
+          Written by <span class="author">Trisul</span> &middot;
+          <time datetime="2025-05-22">May 22, 2025</time>
+        </div>
+      </header>
+      <section>
+        <p>
+          Designing a secure and scalable AWS VPC requires careful planning of subnets, route tables, security groups, and network access control lists. In this comprehensive guide, you'll learn how to architect enterprise-grade VPC networks that follow AWS best practices for security and performance.
+        </p>
+        <h3>VPC Architecture Components</h3>
+        <ul>
+          <li><b>VPC:</b> Your isolated network environment in AWS</li>
+          <li><b>Subnets:</b> Public and private network segments</li>
+          <li><b>Route Tables:</b> Control traffic routing between subnets</li>
+          <li><b>Security Groups:</b> Instance-level firewall rules</li>
+          <li><b>NACLs:</b> Subnet-level network access control</li>
+        </ul>
+        <h3>Step 1: Plan Your CIDR Blocks</h3>
+        <pre><code># Main VPC CIDR
+VPC CIDR: 10.0.0.0/16
+
+# Public Subnets (for load balancers, NAT gateways)
+Public Subnet AZ-1a: 10.0.1.0/24
+Public Subnet AZ-1b: 10.0.2.0/24
+
+# Private Subnets (for application servers)
+Private Subnet AZ-1a: 10.0.10.0/24
+Private Subnet AZ-1b: 10.0.20.0/24
+
+# Database Subnets (for RDS, ElastiCache)
+DB Subnet AZ-1a: 10.0.100.0/24
+DB Subnet AZ-1b: 10.0.200.0/24
+</code></pre>
+        <h3>Step 2: Create VPC and Subnets</h3>
+        <pre><code># Create VPC
+aws ec2 create-vpc --cidr-block 10.0.0.0/16 --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=MyVPC}]'
+
+# Create Internet Gateway
+aws ec2 create-internet-gateway --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=MyIGW}]'
+
+# Attach IGW to VPC
+aws ec2 attach-internet-gateway --vpc-id vpc-12345678 --internet-gateway-id igw-87654321
+</code></pre>
+        <h3>Step 3: Configure Route Tables</h3>
+        <pre><code># Create custom route table for public subnets
+aws ec2 create-route-table --vpc-id vpc-12345678 --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=PublicRouteTable}]'
+
+# Add route to Internet Gateway
+aws ec2 create-route --route-table-id rtb-12345678 --destination-cidr-block 0.0.0.0/0 --gateway-id igw-87654321
+
+# Associate public subnets with public route table
+aws ec2 associate-route-table --subnet-id subnet-12345678 --route-table-id rtb-12345678
+</code></pre>
+        <h3>Step 4: Set Up NAT Gateway for Private Subnets</h3>
+        <pre><code># Allocate Elastic IP for NAT Gateway
+aws ec2 allocate-address --domain vpc
+
+# Create NAT Gateway in public subnet
+aws ec2 create-nat-gateway --subnet-id subnet-12345678 --allocation-id eipalloc-12345678
+
+# Create route table for private subnets
+aws ec2 create-route-table --vpc-id vpc-12345678 --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=PrivateRouteTable}]'
+
+# Add route to NAT Gateway
+aws ec2 create-route --route-table-id rtb-87654321 --destination-cidr-block 0.0.0.0/0 --nat-gateway-id nat-12345678
+</code></pre>
+        <h3>Step 5: Configure Security Groups</h3>
+        <pre><code># Web Server Security Group
+aws ec2 create-security-group --group-name WebServerSG --description "Security group for web servers" --vpc-id vpc-12345678
+
+# Allow HTTP and HTTPS from anywhere
+aws ec2 authorize-security-group-ingress --group-id sg-12345678 --protocol tcp --port 80 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id sg-12345678 --protocol tcp --port 443 --cidr 0.0.0.0/0
+
+# Allow SSH from bastion host only
+aws ec2 authorize-security-group-ingress --group-id sg-12345678 --protocol tcp --port 22 --source-group sg-87654321
+</code></pre>
+        <h3>Step 6: Network ACLs for Additional Security</h3>
+        <pre><code># Create custom NACL
+aws ec2 create-network-acl --vpc-id vpc-12345678 --tag-specifications 'ResourceType=network-acl,Tags=[{Key=Name,Value=WebTierNACL}]'
+
+# Allow inbound HTTP/HTTPS
+aws ec2 create-network-acl-entry --network-acl-id acl-12345678 --rule-number 100 --protocol tcp --port-range From=80,To=80 --cidr-block 0.0.0.0/0 --rule-action allow
+
+# Allow outbound responses
+aws ec2 create-network-acl-entry --network-acl-id acl-12345678 --rule-number 100 --protocol tcp --port-range From=1024,To=65535 --cidr-block 0.0.0.0/0 --rule-action allow --egress
+</code></pre>
+        <h3>Best Practices for VPC Security</h3>
+        <ul>
+          <li>Use multiple Availability Zones for high availability</li>
+          <li>Implement least privilege access with security groups</li>
+          <li>Use VPC Flow Logs for network monitoring</li>
+          <li>Enable GuardDuty for threat detection</li>
+          <li>Use AWS Config for compliance monitoring</li>
+        </ul>
+        <h3>Conclusion</h3>
+        <p>
+          A well-architected VPC provides the foundation for secure and scalable cloud infrastructure. By following these patterns and implementing proper network segmentation, you can build enterprise-grade networks that meet security and compliance requirements while maintaining high performance.
+        </p>
+        <p>
+          <strong>Need help designing your VPC architecture? Let's discuss your requirements!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: AWS, VPC, Network Architecture, Cloud Security, Infrastructure</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
