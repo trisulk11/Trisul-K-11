@@ -141,3 +141,199 @@
         </ul>
         <h3>Step 1: Prepare Hyper-V Hosts</h3>
         <pre><code># Install Hyper-V role on all cluster nodes
+Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart
+
+# Install Failover Clustering feature
+Install-WindowsFeature -Name Failover-Clustering -IncludeManagementTools
+
+# Install Multipath I/O for shared storage
+Install-WindowsFeature -Name Multipath-IO -Restart
+
+# Configure network adapters
+Rename-NetAdapter -Name "Ethernet" -NewName "Management"
+Rename-NetAdapter -Name "Ethernet 2" -NewName "LiveMigration"
+Rename-NetAdapter -Name "Ethernet 3" -NewName "Heartbeat"
+
+# Configure IP addresses
+New-NetIPAddress -InterfaceAlias "Management" -IPAddress 192.168.1.10 -PrefixLength 24 -DefaultGateway 192.168.1.1
+New-NetIPAddress -InterfaceAlias "LiveMigration" -IPAddress 10.0.1.10 -PrefixLength 24
+New-NetIPAddress -InterfaceAlias "Heartbeat" -IPAddress 10.0.2.10 -PrefixLength 24
+
+# Set DNS servers
+Set-DnsClientServerAddress -InterfaceAlias "Management" -ServerAddresses 192.168.1.100,192.168.1.101
+</code></pre>
+        <h3>Step 2: Configure Shared Storage</h3>
+        <pre><code># Configure iSCSI initiator (if using iSCSI SAN)
+Set-Service -Name MSiSCSI -StartupType Automatic
+Start-Service MSiSCSI
+
+# Connect to iSCSI target
+New-IscsiTargetPortal -TargetPortalAddress 192.168.1.200
+Connect-IscsiTarget -NodeAddress "iqn.2021-01.com.company:target1"
+
+# Initialize and format shared disks
+Get-Disk | Where-Object {$_.PartitionStyle -eq 'RAW'} | Initialize-Disk -PartitionStyle GPT
+New-Partition -DiskNumber 1 -UseMaximumSize -AssignDriveLetter
+Format-Volume -DriveLetter E -FileSystem NTFS -NewFileSystemLabel "ClusterStorage1" -Confirm:$false
+
+# Configure Storage Spaces Direct (alternative to SAN)
+Enable-ClusterStorageSpacesDirect -PoolFriendlyName "S2D Pool" -CacheState Enabled
+
+# Create virtual disk
+New-VirtualDisk -StoragePoolFriendlyName "S2D Pool" -FriendlyName "CSV01" -Size 1TB -ResiliencySettingName Mirror
+
+# Create volume
+New-Volume -DiskFriendlyName "CSV01" -FriendlyName "CSV01" -FileSystem CSVFS_NTFS
+</code></pre>
+        <h3>Step 3: Create Failover Cluster</h3>
+        <pre><code># Test cluster configuration
+Test-Cluster -Node HV01,HV02,HV03 -Include "Storage Spaces Direct","Storage","Network","System Configuration","Hyper-V Configuration"
+
+# Create cluster
+New-Cluster -Name "HyperVCluster" -Node HV01,HV02,HV03 -StaticAddress 192.168.1.50
+
+# Configure cluster networks
+Get-ClusterNetwork | Where-Object {$_.Address -eq "192.168.1.0"} | Set-ClusterNetwork -Name "Management" -Role ClusterAndClient
+Get-ClusterNetwork | Where-Object {$_.Address -eq "10.0.1.0"} | Set-ClusterNetwork -Name "LiveMigration" -Role ClusterOnly
+Get-ClusterNetwork | Where-Object {$_.Address -eq "10.0.2.0"} | Set-ClusterNetwork -Name "Heartbeat" -Role ClusterOnly
+
+# Add shared storage to cluster
+Get-ClusterAvailableDisk | Add-ClusterDisk
+
+# Create Cluster Shared Volume
+Add-ClusterSharedVolume -Name "Cluster Disk 1"
+</code></pre>
+        <h3>Step 4: Configure Hyper-V Settings</h3>
+        <pre><code># Configure Hyper-V virtual switch
+New-VMSwitch -Name "External" -NetAdapterName "Management" -AllowManagementOS $true
+
+# Configure live migration settings
+Set-VMHost -VirtualMachineMigrationEnabled $true
+Set-VMHost -VirtualMachineMigrationAuthenticationType Kerberos
+Set-VMHost -VirtualMachineMigrationPerformanceOption SMB
+Set-VMHost -MaximumVirtualMachineMigrations 4
+Set-VMHost -MaximumStorageMigrations 4
+
+# Configure live migration networks
+Add-VMMigrationNetwork -Subnet 10.0.1.0/24 -Priority 1
+Add-VMMigrationNetwork -Subnet 192.168.1.0/24 -Priority 2
+
+# Set default VM storage locations
+Set-VMHost -VirtualHardDiskPath "C:\ClusterStorage\Volume1\VMs"
+Set-VMHost -VirtualMachinePath "C:\ClusterStorage\Volume1\VMs"
+</code></pre>
+        <h3>Step 5: Create Highly Available Virtual Machines</h3>
+        <pre><code># Create VM on cluster shared volume
+$VMName = "WebServer01"
+$VMPath = "C:\ClusterStorage\Volume1\VMs"
+$VHDPath = "$VMPath\$VMName\$VMName.vhdx"
+
+New-VM -Name $VMName -Path $VMPath -MemoryStartupBytes 4GB -Generation 2
+New-VHD -Path $VHDPath -SizeBytes 60GB -Dynamic
+Add-VMHardDiskDrive -VMName $VMName -Path $VHDPath
+Set-VMDvdDrive -VMName $VMName -Path "C:\ISO\WindowsServer2022.iso"
+Connect-VMNetworkAdapter -VMName $VMName -SwitchName "External"
+
+# Configure VM for high availability
+Add-ClusterVirtualMachineRole -VMName $VMName
+
+# Set VM anti-affinity (spread VMs across nodes)
+$VM1 = Get-ClusterGroup -Name $VMName
+$VM2 = Get-ClusterGroup -Name "WebServer02"
+Set-ClusterAffinityRule -Name "WebServers" -RuleType AntiAffinity -Groups $VM1,$VM2
+
+# Configure VM monitoring
+Add-ClusterVMMonitoredItem -VirtualMachine $VMName -Service "W3SVC"
+</code></pre>
+        <h3>Step 6: Configure Backup and Disaster Recovery</h3>
+        <pre><code># Install Windows Server Backup
+Install-WindowsFeature -Name Windows-Server-Backup
+
+# Create backup policy for cluster
+$Policy = New-WBPolicy
+$BackupLocation = New-WBBackupTarget -VolumePath "D:"
+Add-WBBackupTarget -Policy $Policy -Target $BackupLocation
+
+# Add system state and cluster configuration
+Add-WBSystemState -Policy $Policy
+Add-WBBareMetalRecovery -Policy $Policy
+
+# Schedule backup
+Set-WBSchedule -Policy $Policy -Schedule 02:00
+
+# Backup cluster configuration
+Get-Cluster | Backup-ClusterDatabase -Path "C:\ClusterBackup"
+
+# Configure VM replication (Hyper-V Replica)
+Enable-VMReplication -VMName $VMName -ReplicaServerName "DR-HV01" -ReplicaServerPort 443 -AuthenticationType Certificate -CertificateThumbprint "1234567890ABCDEF"
+Start-VMInitialReplication -VMName $VMName
+</code></pre>
+        <h3>Step 7: Performance Optimization</h3>
+        <pre><code># Configure NUMA topology awareness
+Set-VMProcessor -VMName $VMName -ExposeVirtualizationExtensions $true
+Set-VM -VMName $VMName -AutomaticStartAction Start -AutomaticStopAction ShutDown
+
+# Enable SR-IOV for network performance
+Set-VMNetworkAdapter -VMName $VMName -IovWeight 100
+
+# Configure dynamic memory
+Set-VMMemory -VMName $VMName -DynamicMemoryEnabled $true -MinimumBytes 2GB -StartupBytes 4GB -MaximumBytes 8GB -Priority 80
+
+# Optimize storage performance
+Set-VMHardDiskDrive -VMName $VMName -Path $VHDPath -QoSPolicyName "High Performance"
+
+# Configure VM CPU settings
+Set-VMProcessor -VMName $VMName -Count 4 -Reserve 10 -Maximum 75 -RelativeWeight 200
+</code></pre>
+        <h3>Step 8: Monitoring and Maintenance</h3>
+        <pre><code># Monitor cluster health
+Get-ClusterNode | Get-ClusterNodeStatus
+Get-ClusterResource | Where-Object {$_.State -ne "Online"}
+Get-ClusterSharedVolume | Select Name,State,Node
+
+# Monitor VM performance
+Get-VM | Get-VMMemory | Select VMName,Assigned,Maximum,Minimum
+Get-VM | Get-VMProcessor | Select VMName,Count,LoadPercentage
+
+# Cluster validation and maintenance
+Test-Cluster -Node (Get-ClusterNode).Name -Include "Inventory","Network","Storage","System Configuration"
+
+# Update cluster nodes (rolling updates)
+Suspend-ClusterNode -Name HV01 -Drain
+# Apply updates and reboot
+Resume-ClusterNode -Name HV01
+
+# Monitor event logs
+Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-FailoverClustering/Operational';Level=2,3} -MaxEvents 50
+Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-Hyper-V-VMMS-Admin';Level=2,3} -MaxEvents 50
+</code></pre>
+        <h3>Best Practices</h3>
+        <ul>
+          <li>Use dedicated networks for cluster communication and live migration</li>
+          <li>Implement proper storage redundancy and backup strategies</li>
+          <li>Monitor cluster and VM performance regularly</li>
+          <li>Test disaster recovery procedures periodically</li>
+          <li>Keep cluster nodes synchronized with Windows Updates</li>
+        </ul>
+        <h3>Conclusion</h3>
+        <p>
+          Windows Server 2022 Hyper-V with failover clustering provides enterprise-grade virtualization with high availability, live migration, and disaster recovery capabilities. Proper planning of storage, networking, and monitoring ensures reliable virtualized infrastructure for critical workloads.
+        </p>
+        <p>
+          <strong>Need assistance with your Hyper-V cluster deployment? Let's build a robust virtualization platform!</strong>
+        </p>
+      </section>
+      <footer>
+        <span>Category: Windows Server, Hyper-V, Failover Clustering, Virtualization, High Availability</span>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <p>Contact: <a href="mailto:trisuk11@gmail.com">trisuk11@gmail.com</a> | 
+      <a href="https://www.linkedin.com/in/trisul-r-21548a352/" target="_blank">LinkedIn</a> | 
+      <a href="https://www.fiverr.com/trisulk/" target="_blank">Fiverr</a>
+    </p>
+    <p>&copy; 2025 Trisul. All rights reserved.</p>
+  </footer>
+</body>
+</html>
